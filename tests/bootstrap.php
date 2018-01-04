@@ -1,0 +1,4 @@
+<?php
+
+$loader = include __DIR__ . '/../vendor/autoload.php';
+$loader->addPsr4('SDom\\Test\\', __DIR__ . '/classes');

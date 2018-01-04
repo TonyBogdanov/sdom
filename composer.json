@@ -1,0 +1,24 @@
+{
+    "name": "tonybogdanov/sdom",
+    "description": "Simple jQuery-like DOM representation in PHP",
+    "type": "library",
+    "require": {
+        "kevintweber/html-tokenizer": "^0.4.0",
+        "symfony/css-selector": "^4.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tony Bogdanov",
+            "email": "tonybogdanov@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "SDom\\": "classes/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.5"
+    }
+}
