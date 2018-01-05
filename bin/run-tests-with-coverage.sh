@@ -1,2 +1,5 @@
 #!/usr/bin/env bash
-../vendor/bin/phpunit --coverage-text --configuration ../phpunit.xml
+
+bin="$(dirname "$0")/run-tests.sh"
+
+$bin --coverage-text

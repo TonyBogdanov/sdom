@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
 tmp=$(mktemp -u)
+bin="$(dirname "$0")/run-tests.sh"
 
-../vendor/bin/phpunit --coverage-html "$tmp" --configuration ../phpunit.xml
+$bin --coverage-html "$tmp"
 
 # MacOS
 open "$tmp/index.html"
