@@ -49,7 +49,51 @@ class CommentTest extends TestCase
      */
     public function testConstructAndToString()
     {
-        $this->assertEquals('<!--demo-->', (string) $this->demoComment());
+        $this->assertSame('<!--demo-->', (string) $this->demoComment());
+    }
+
+    /**
+     * Test if native cloning throws an exception.
+     *
+     * @covers ::__clone()
+     * @expectedException \BadMethodCallException
+     */
+    public function testNativeClone()
+    {
+        (clone $this->demoComment());
+    }
+
+    /**
+     * Test if cloning inherits the parent relationship to the cloned node and releases the old one.
+     *
+     * @covers ::clone()
+     */
+    public function testClone()
+    {
+        $child = $this->demoComment();
+        $preChild = $this->demoElement();
+        $postChild = $this->demoElement();
+        $parent = $this->demoElement()
+            ->insertAfter($preChild)
+            ->insertAfter($child)
+            ->insertAfter($postChild);
+
+        $clone = $child->clone();
+
+        $this->assertInstanceOf(get_class($child), $clone);
+        $this->assertNotSame($child, $clone);
+        $this->assertSame((string) $child, (string) $clone);
+
+        $this->assertTrue($parent->isChild($child));
+        $this->assertFalse($parent->isChild($clone));
+        $this->assertSame($parent, $child->parent());
+        $this->assertNull($clone->parent());
+
+        // make sure original tree is kept
+        $this->assertCount(3, $parent);
+        $this->assertSame($preChild, $parent->getIterator()[0]);
+        $this->assertSame($child, $parent->getIterator()[1]);
+        $this->assertSame($postChild, $parent->getIterator()[2]);
     }
 
     /**
@@ -65,7 +109,7 @@ class CommentTest extends TestCase
         $this->assertNull($demo->parent());
 
         $parent->insertAfter($demo);
-        $this->assertEquals($parent, $demo->parent());
+        $this->assertSame($parent, $demo->parent());
     }
 
     /**
@@ -83,7 +127,7 @@ class CommentTest extends TestCase
         $this->assertNull($demo->parent());
         $demo->attach($parent);
 
-        $this->assertEquals($parent, $demo->parent());
+        $this->assertSame($parent, $demo->parent());
     }
 
     /**
@@ -119,7 +163,7 @@ class CommentTest extends TestCase
 
         $this->assertFalse($parent1->isChild($demo));
         $this->assertTrue($parent2->isChild($demo));
-        $this->assertEquals($parent2, $demo->parent());
+        $this->assertSame($parent2, $demo->parent());
     }
 
     /**

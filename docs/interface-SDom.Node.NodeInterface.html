@@ -163,6 +163,38 @@ Interface NodeInterface
 
 
 
+<tr id="___clone">
+
+    <td class="attributes col-md-1">
+        <code class="keyword">
+                
+                public
+        </code>
+    </td>
+
+    <td class="name">
+        <div>
+            <a class="anchor pull-right" href="#___clone">#</a>
+            <code><a href="source-interface-SDom.Node.NodeInterface.html#26">__clone</a>( )</code>
+
+            <div class="description">
+                Throw exception to signify native cloning is not allowed.
+
+One should use clone() instead.
+
+
+
+
+
+
+
+            </div>
+        </div>
+    </td>
+</tr>
+
+
+
 <tr id="_parent">
 
     <td class="attributes col-md-1">
@@ -175,7 +207,7 @@ Interface NodeInterface
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_parent">#</a>
-            <code><a href="source-interface-SDom.Node.NodeInterface.html#25">parent</a>( )</code>
+            <code><a href="source-interface-SDom.Node.NodeInterface.html#33">parent</a>( )</code>
 
             <div class="description">
                 Return the parent node or null if such isn't set.
@@ -205,7 +237,7 @@ Interface NodeInterface
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_attach">#</a>
-            <code><a href="source-interface-SDom.Node.NodeInterface.html#39">attach</a>( <span> <a href="interface-SDom.Node.NodeInterface.html">SDom\Node\NodeInterface</a> <span class="property-name">$parent</span> </span> )</code>
+            <code><a href="source-interface-SDom.Node.NodeInterface.html#47">attach</a>( <span> <a href="interface-SDom.Node.NodeInterface.html">SDom\Node\NodeInterface</a> <span class="property-name">$parent</span> </span> )</code>
 
             <div class="description">
                 Attach this node to another one making the later a parent.
@@ -241,11 +273,44 @@ parent before attaching to the new one when applicable.
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_detach">#</a>
-            <code><a href="source-interface-SDom.Node.NodeInterface.html#47">detach</a>( )</code>
+            <code><a href="source-interface-SDom.Node.NodeInterface.html#55">detach</a>( )</code>
 
             <div class="description">
                 Detach this node from it's parent, if such is set by both removing the parent node reference, and removing this
 node as a child node from the parent when applicable.
+
+
+
+
+
+
+
+            </div>
+        </div>
+    </td>
+</tr>
+
+
+
+<tr id="_clone">
+
+    <td class="attributes col-md-1">
+        <code class="keyword">
+                
+                public
+        </code>
+    </td>
+
+    <td class="name">
+        <div>
+            <a class="anchor pull-right" href="#_clone">#</a>
+            <code><a href="source-interface-SDom.Node.NodeInterface.html#64">clone</a>( )</code>
+
+            <div class="description">
+                Ensure child nodes are also cloned when applicable.
+
+Ensure old node is detached from parent.
+Ensure (new) cloned node is attached to parent node.
 
 
 

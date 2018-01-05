@@ -43,7 +43,7 @@ class DomTest extends TestCase
              */
             list($node, $children) = $entry;
 
-            $this->assertEquals($node, $dom->get($index));
+            $this->assertSame($node, $dom->get($index));
 
             if (0 < count($children)) {
                 $this->assertTree($children, $dom->eq($index)->children());
@@ -72,12 +72,12 @@ class DomTest extends TestCase
     public function demoHTML(): array
     {
         return [
-            ['<![CDATA[demo]]>', CData::class, 'demo', null, null],
-            ['<!--demo-->', Comment::class, 'demo', null, null],
-            ['<!DOCTYPE demo>', DocType::class, 'demo', null, null],
-            ['demo', Text::class, 'demo', null, null],
-            ['<demo a="b" c="d" e></demo>', Element::class, 'demo', false, ['a' => 'b', 'c' => 'd', 'e' => '']],
-            ['<hr a="b" c="d" e/>', Element::class, 'hr', true, ['a' => 'b', 'c' => 'd', 'e' => '']]
+            [(string) $this->demoCData(), CData::class, 'demo', null, null],
+            [(string) $this->demoComment(), Comment::class, 'demo', null, null],
+            [(string) $this->demoDocType(), DocType::class, 'demo', null, null],
+            [(string) $this->demoText(), Text::class, 'demo', null, null],
+            [(string) $this->demoElement(true), Element::class, 'demo', false, ['a' => 'b', 'c' => 'd', 'e' => '']],
+            [(string) $this->demoVoidElement(true), Element::class, 'br', true, ['a' => 'b', 'c' => 'd', 'e' => '']]
         ];
     }
 
@@ -137,10 +137,10 @@ class DomTest extends TestCase
     public function performTestConstructOrAddNull(bool $construct)
     {
         $dom = new Dom(); // can't test add() with no argument
-        $this->assertEquals([], $dom->get());
+        $this->assertSame([], $dom->get());
 
         $dom = $construct ? new Dom(null) : (new Dom())->add(null);
-        $this->assertEquals([], $dom->get());
+        $this->assertSame([], $dom->get());
     }
 
     /**
@@ -160,7 +160,7 @@ class DomTest extends TestCase
             ->add($text);
 
         $new = $construct ? new Dom($dom) : (new Dom())->add($dom);
-        $this->assertEquals([$cData, $comment, $text], $new->get());
+        $this->assertSame([$cData, $comment, $text], $new->get());
     }
 
     /**
@@ -172,7 +172,7 @@ class DomTest extends TestCase
     public function performTestConstructOrAddNodeInterface(bool $construct, NodeInterface $node)
     {
         $dom = $construct ? new Dom($node) : (new Dom())->add($node);
-        $this->assertEquals([$node], $dom->get());
+        $this->assertSame([$node], $dom->get());
     }
 
     /**
@@ -210,7 +210,7 @@ class DomTest extends TestCase
         $cotProperty = (new \ReflectionClass($element))->getProperty($isElement ? 'tag' : 'content');
         $cotProperty->setAccessible(true);
 
-        $this->assertEquals($nodeContentOrTag, $cotProperty->getValue($element));
+        $this->assertSame($nodeContentOrTag, $cotProperty->getValue($element));
 
         if (!$isElement) {
             return;
@@ -219,7 +219,7 @@ class DomTest extends TestCase
         /** @var Element $element */
 
         if (isset($elementIsVoid)) {
-            $this->assertEquals($elementIsVoid, $element->isVoid());
+            $this->assertSame($elementIsVoid, $element->isVoid());
         }
 
         if (isset($elementAttributes)) {
@@ -229,7 +229,7 @@ class DomTest extends TestCase
              */
             foreach ($elementAttributes as $name => $value) {
                 $this->assertTrue($element->hasAttribute($name));
-                $this->assertEquals($value, $element->getAttribute($name));
+                $this->assertSame($value, $element->getAttribute($name));
             }
         }
     }
@@ -581,7 +581,7 @@ class DomTest extends TestCase
             ->add($comment2);
 
         $this->assertCount(3, $dom);
-        $this->assertEquals([$cData, $comment1, $comment2], $dom->get());
+        $this->assertSame([$cData, $comment1, $comment2], $dom->get());
     }
 
     /**
@@ -609,7 +609,7 @@ class DomTest extends TestCase
         foreach ($dom as $i => $subDom) {
             $this->assertInstanceOf(Dom::class, $subDom);
             $this->assertCount(1, $subDom);
-            $this->assertEquals($nodes[$i], $subDom->get(0));
+            $this->assertSame($nodes[$i], $subDom->get(0));
         }
     }
 
@@ -621,8 +621,8 @@ class DomTest extends TestCase
     public function testCount()
     {
         $this->assertCount(0, new Dom());
-        $this->assertCount(1, new Dom('<div />'));
-        $this->assertCount(2, new Dom('<div /><div />'));
+        $this->assertCount(1, new Dom((string) $this->demoElement()));
+        $this->assertCount(2, new Dom((string) $this->demoElement() . (string) $this->demoElement()));
     }
 
     /**
@@ -639,9 +639,9 @@ class DomTest extends TestCase
             ->add($cData)
             ->add($comment);
 
-        $this->assertEquals($cData, $dom->get(0));
-        $this->assertEquals($comment, $dom->get(1));
-        $this->assertEquals([$cData, $comment], $dom->get());
+        $this->assertSame($cData, $dom->get(0));
+        $this->assertSame($comment, $dom->get(1));
+        $this->assertSame([$cData, $comment], $dom->get());
     }
 
     /**
@@ -707,9 +707,9 @@ class DomTest extends TestCase
         $this->assertCount(1, $eq2);
         $this->assertCount(0, $eq3);
 
-        $this->assertEquals($cData, $eq0->get(0));
-        $this->assertEquals($comment, $eq1->get(0));
-        $this->assertEquals($text, $eq2->get(0));
+        $this->assertSame($cData, $eq0->get(0));
+        $this->assertSame($comment, $eq1->get(0));
+        $this->assertSame($text, $eq2->get(0));
     }
 
     /**
@@ -734,7 +734,7 @@ class DomTest extends TestCase
 
         $this->assertInstanceOf(Dom::class, $first);
         $this->assertCount(1, $first);
-        $this->assertEquals($nodes[0], $first->get(0));
+        $this->assertSame($nodes[0], $first->get(0));
     }
 
     /**
@@ -759,7 +759,7 @@ class DomTest extends TestCase
 
         $this->assertInstanceOf(Dom::class, $last);
         $this->assertCount(1, $last);
-        $this->assertEquals($nodes[2], $last->get(0));
+        $this->assertSame($nodes[2], $last->get(0));
     }
 
     /**
@@ -785,6 +785,37 @@ class DomTest extends TestCase
             ->add($element2)
             ->add($comment3);
 
-        $this->assertEquals([$cData, $comment1, $comment2], $dom->children()->get());
+        $this->assertSame([$cData, $comment1, $comment2], $dom->children()->get());
     }
+
+//    public function testAppend()
+//    {
+//        $element1 = $this->demoElement();
+//        $element2 = $this->demoElement();
+//
+//        $child1 = $this->demoElement();
+//        $child2 = $this->demoElement();
+//        $child3 = $this->demoElement();
+//
+//        $childDeep = $this->demoElement();
+//
+//        $dom = (new Dom($element1))->add($element2);
+//
+//        $dom->append($child1)
+////            ->append($child2)
+////            ->append((new Dom($child3))->append($childDeep))
+//        ;
+//
+//        dump($dom);
+//
+////        $this->assertTree([[
+////            $element1, [
+////                [$child1, []]
+////            ]
+////        ], [
+////            $element2, [
+////                [$child1, []]
+////            ]
+////        ]], $dom);
+//    }
 }

@@ -18,6 +18,14 @@ interface NodeInterface
     public function __toString(): string;
 
     /**
+     * Throw exception to signify native cloning is not allowed.
+     * One should use clone() instead.
+     *
+     * @throws \BadMethodCallException
+     */
+    public function __clone();
+
+    /**
      * Return the parent node or null if such isn't set.
      *
      * @return null|NodeInterface
@@ -45,4 +53,13 @@ interface NodeInterface
      * @return $this
      */
     public function detach(): NodeInterface;
+
+    /**
+     * Ensure child nodes are also cloned when applicable.
+     * Ensure old node is detached from parent.
+     * Ensure (new) cloned node is attached to parent node.
+     *
+     * @return NodeInterface
+     */
+    public function clone(): NodeInterface;
 }

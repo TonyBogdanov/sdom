@@ -43,18 +43,42 @@ trait DemoGeneratorTrait
     }
 
     /**
+     * @param bool $withAttributes
+     * @param bool $withChildren
      * @return Element
      */
-    protected function demoElement(): Element
+    protected function demoElement(bool $withAttributes = false, bool $withChildren = false): Element
     {
-        return new Element('demo');
+        $demo = new Element('demo');
+
+        if ($withAttributes) {
+            $demo->setAttribute('a', 'b')
+                ->setAttribute('c', 'd')
+                ->setAttribute('e', '');
+        }
+
+        if ($withChildren) {
+            $demo->insertAfter(new Element('a'))
+                ->insertAfter(new Element('b'));
+        }
+
+        return $demo;
     }
 
     /**
+     * @param bool $withAttributes
      * @return Element
      */
-    protected function demoVoidElement(): Element
+    protected function demoVoidElement(bool $withAttributes = false): Element
     {
-        return new Element('br');
+        $demo = new Element('br');
+
+        if ($withAttributes) {
+            $demo->setAttribute('a', 'b')
+                ->setAttribute('c', 'd')
+                ->setAttribute('e', '');
+        }
+
+        return $demo;
     }
 }

@@ -36,6 +36,14 @@ class DocType implements NodeInterface
     /**
      * @inheritDoc
      */
+    public function __clone()
+    {
+        throw new \BadMethodCallException('Native cloning is not allowed, use clone() instead.');
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function parent(): ?NodeInterface
     {
         return null;
@@ -63,5 +71,13 @@ class DocType implements NodeInterface
             get_class($this),
             explode('::', __METHOD__)[1]
         ));
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function clone(): NodeInterface
+    {
+        return new static($this->content);
     }
 }

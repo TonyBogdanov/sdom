@@ -40,7 +40,34 @@ class DocTypeTest extends TestCase
      */
     public function testConstructAndToString()
     {
-        $this->assertEquals('<!DOCTYPE demo>', (string) $this->demoDocType());
+        $this->assertSame('<!DOCTYPE demo>', (string) $this->demoDocType());
+    }
+
+    /**
+     * Test if native cloning throws an exception.
+     *
+     * @covers ::__clone()
+     * @expectedException \BadMethodCallException
+     */
+    public function testNativeClone()
+    {
+        (clone $this->demoDocType());
+    }
+
+    /**
+     * Test if cloning succeeds.
+     * Parent relationships are not applicable.
+     *
+     * @covers ::clone()
+     */
+    public function testClone()
+    {
+        $child = $this->demoDocType();
+        $clone = $child->clone();
+
+        $this->assertInstanceOf(get_class($child), $clone);
+        $this->assertNotSame($child, $clone);
+        $this->assertSame((string) $child, (string) $clone);
     }
 
     /**

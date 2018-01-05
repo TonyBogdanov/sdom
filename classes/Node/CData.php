@@ -41,6 +41,14 @@ class CData implements NodeInterface
     /**
      * @inheritDoc
      */
+    public function __clone()
+    {
+        throw new \BadMethodCallException('Native cloning is not allowed, use clone() instead.');
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function parent(): ?NodeInterface
     {
         return $this->parent;
@@ -91,5 +99,13 @@ class CData implements NodeInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function clone(): NodeInterface
+    {
+        return new static($this->content);
     }
 }

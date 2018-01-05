@@ -78,7 +78,7 @@ class Dom implements
                 break;
 
             case $content instanceof self:
-                $this->nodes = $content->get();
+                $this->nodes = $content->nodes;
                 break;
 
             case $content instanceof NodeInterface:
@@ -196,7 +196,7 @@ class Dom implements
     }
 
     /**
-     * Add all nodes from the collection constructed by the specified content to the current list of nodes.
+     * Add the specified content to the end of the collection.
      *
      * @param $content
      * @return Dom
@@ -204,7 +204,7 @@ class Dom implements
     public function add($content): Dom
     {
         /** @var NodeInterface $node */
-        foreach ((new static($content))->get() as $node) {
+        foreach ((new static($content))->nodes as $node) {
             if (!in_array($node, $this->nodes, true)) {
                 $this->nodes[] = $node;
             }
@@ -270,7 +270,7 @@ class Dom implements
         $dom = new Dom();
 
         /** @var NodeInterface $node */
-        foreach ($this->get() as $node) {
+        foreach ($this->nodes as $node) {
             if ($node instanceof Element) {
                 /** @var NodeInterface $child */
                 foreach ($node as $child) {
@@ -280,5 +280,49 @@ class Dom implements
         }
 
         return $dom;
+    }
+
+    /**
+     * Insert content, specified by the parameter, to the end of immediate child nodes of all Element nodes in the
+     * collection.
+     *
+     * @param $content
+     * @return Dom
+     */
+    public function append($content): Dom
+    {
+        /** @var NodeInterface $node */
+        foreach ($this->nodes as $node) {
+            if ($node instanceof Element) {
+                /** @var NodeInterface $child */
+                foreach ((new static($content))->nodes as $child) {
+                    $node->insertAfter(null === $child->parent() ? $child : clone $child);
+                }
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Insert content, specified by the parameter, to the beginning of immediate child nodes of all Element nodes in
+     * the collection.
+     *
+     * @param $content
+     * @return Dom
+     */
+    public function prepend($content): Dom
+    {
+        /** @var NodeInterface $node */
+        foreach ($this->nodes as $node) {
+            if ($node instanceof Element) {
+                /** @var NodeInterface $child */
+                foreach (array_reverse((new static($content))->nodes) as $child) {
+                    $node->insertBefore($child);
+                }
+            }
+        }
+
+        return $this;
     }
 }

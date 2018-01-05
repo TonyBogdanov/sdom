@@ -79,6 +79,14 @@ class Element implements
     }
 
     /**
+     * @inheritDoc
+     */
+    public function __clone()
+    {
+        throw new \BadMethodCallException('Native cloning is not allowed, use clone() instead.');
+    }
+
+    /**
      * Return TRUE if the specified name exists as attribute.
      * The attribute name is lowercased.
      *
@@ -190,6 +198,36 @@ class Element implements
         }
 
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function clone(): NodeInterface
+    {
+        $clone = new static($this->tag);
+
+        /**
+         * Inherit attributes.
+         *
+         * @var string $name
+         * @var string $value
+         */
+        foreach ($this->attributes as $name => $value) {
+            $clone->setAttribute($name, $value);
+        }
+
+        /**
+         * Inherit cloned child nodes.
+         *
+         * @var int $index
+         * @var NodeInterface $child
+         */
+        foreach ($this->children as $index => $child) {
+            $clone->insertAfter($child->clone());
+        }
+
+        return $clone;
     }
 
     /**
