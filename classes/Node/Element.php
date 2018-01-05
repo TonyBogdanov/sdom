@@ -56,7 +56,11 @@ class Element implements
          * @var string $value
          */
         foreach ($this->attributes as $key => $value) {
-            $html .= ' ' . htmlspecialchars($key) . '="' . htmlspecialchars($value, ENT_QUOTES) . '"';
+            $html .= ' ' . htmlspecialchars($key);
+
+            if ('' !== $value) {
+                $html .= '="' . htmlspecialchars($value, ENT_QUOTES) . '"';
+            }
         }
 
         if ($this->isVoid()) {
@@ -88,13 +92,14 @@ class Element implements
 
     /**
      * Set the specified value for the specified attribute name.
+     * Attributes with no value, or an empty string as value are rendered without the ="..." part.
      * The attribute name is lowercased.
      *
      * @param string $name
      * @param string $value
      * @return Element
      */
-    public function setAttribute(string $name, string $value): Element
+    public function setAttribute(string $name, string $value = ''): Element
     {
         $this->attributes[strtolower($name)] = $value;
         return $this;

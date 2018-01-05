@@ -56,12 +56,12 @@ class ElementTest extends TestCase
 
         // with attributes
         $this->assertEquals(
-            '<demo a="b" c="d"></demo>',
-            (string) $this->demoElement()->setAttribute('a', 'b')->setAttribute('c', 'd')
+            '<demo a="b" c="d" e></demo>',
+            (string) $this->demoElement()->setAttribute('a', 'b')->setAttribute('c', 'd')->setAttribute('e')
         );
         $this->assertEquals(
-            '<br a="b" c="d"/>',
-            (string) $this->demoVoidElement()->setAttribute('a', 'b')->setAttribute('c', 'd')
+            '<br a="b" c="d" e/>',
+            (string) $this->demoVoidElement()->setAttribute('a', 'b')->setAttribute('c', 'd')->setAttribute('e')
         );
 
         // with children
@@ -72,10 +72,11 @@ class ElementTest extends TestCase
 
         // with attributes & children
         $this->assertEquals(
-            '<demo a="b" c="d"><a></a><b></b></demo>',
+            '<demo a="b" c="d" e><a></a><b></b></demo>',
             (string) $this->demoElement()
                 ->setAttribute('a', 'b')
                 ->setAttribute('c', 'd')
+                ->setAttribute('e')
                 ->insertAfter(new Element('a'))
                 ->insertAfter(new Element('b'))
         );
