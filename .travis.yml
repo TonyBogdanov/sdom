@@ -4,8 +4,11 @@ language: php
 php:
   - 7.1.3
 
+before_install:
+  - chmod +x ./bin/run-tests-with-coverage.sh
+
 install:
   - composer install
 
 script:
-  - ./bin/run-tests.sh
+  - ./bin/run-tests-with-coverage.sh
