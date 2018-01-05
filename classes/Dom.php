@@ -259,4 +259,26 @@ class Dom implements
     {
         return $this->eq(count($this) - 1);
     }
+
+    /**
+     * Get a new Dom collection with the immediate child nodes of each of the Element nodes in the collection.
+     *
+     * @return Dom
+     */
+    public function children(): Dom
+    {
+        $dom = new Dom();
+
+        /** @var NodeInterface $node */
+        foreach ($this->get() as $node) {
+            if ($node instanceof Element) {
+                /** @var NodeInterface $child */
+                foreach ($node as $child) {
+                    $dom->add($child);
+                }
+            }
+        }
+
+        return $dom;
+    }
 }

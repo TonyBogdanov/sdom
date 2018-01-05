@@ -25,14 +25,30 @@ class DomTest extends TestCase
     use DemoGeneratorTrait;
 
     /**
+     * @param array[] $tree
      * @param Dom $dom
-     * @return NodeInterface[]
      */
-    protected function nodes(Dom $dom): array
+    protected function assertTree(array $tree, Dom $dom)
     {
-        $reflection = (new \ReflectionClass($dom))->getMethod('get');
-        $reflection->setAccessible(true);
-        return $reflection->invoke($dom);
+        $this->assertCount(count($tree), $dom);
+
+        /**
+         * @var int $index
+         * @var array $entry
+         */
+        foreach ($tree as $index => $entry) {
+            /**
+             * @var NodeInterface $node
+             * @var array[]
+             */
+            list($node, $children) = $entry;
+
+            $this->assertEquals($node, $dom->get($index));
+
+            if (0 < count($children)) {
+                $this->assertTree($children, $dom->eq($index)->children());
+            }
+        }
     }
 
     /**
@@ -121,10 +137,10 @@ class DomTest extends TestCase
     public function performTestConstructOrAddNull(bool $construct)
     {
         $dom = new Dom(); // can't test add() with no argument
-        $this->assertEquals([], $this->nodes($dom));
+        $this->assertEquals([], $dom->get());
 
         $dom = $construct ? new Dom(null) : (new Dom())->add(null);
-        $this->assertEquals([], $this->nodes($dom));
+        $this->assertEquals([], $dom->get());
     }
 
     /**
@@ -144,7 +160,7 @@ class DomTest extends TestCase
             ->add($text);
 
         $new = $construct ? new Dom($dom) : (new Dom())->add($dom);
-        $this->assertEquals([$cData, $comment, $text], $this->nodes($new));
+        $this->assertEquals([$cData, $comment, $text], $new->get());
     }
 
     /**
@@ -156,7 +172,7 @@ class DomTest extends TestCase
     public function performTestConstructOrAddNodeInterface(bool $construct, NodeInterface $node)
     {
         $dom = $construct ? new Dom($node) : (new Dom())->add($node);
-        $this->assertEquals([$node], $this->nodes($dom));
+        $this->assertEquals([$node], $dom->get());
     }
 
     /**
@@ -547,6 +563,28 @@ class DomTest extends TestCase
     }
 
     /**
+     * Test that add() allows duplicate nodes, but ignores duplicate node instances.
+     *
+     * @covers ::add()
+     */
+    public function testAddDuplicates()
+    {
+        $cData = $this->demoCData();
+        $comment1 = $this->demoComment();
+        $comment2 = $this->demoComment();
+
+        $dom = (new Dom())
+            ->add($cData)
+            ->add($comment1)
+            ->add($comment2)
+            ->add($comment1)
+            ->add($comment2);
+
+        $this->assertCount(3, $dom);
+        $this->assertEquals([$cData, $comment1, $comment2], $dom->get());
+    }
+
+    /**
      * Test \IteratorAggregate.
      *
      * @covers ::getIterator()
@@ -722,5 +760,31 @@ class DomTest extends TestCase
         $this->assertInstanceOf(Dom::class, $last);
         $this->assertCount(1, $last);
         $this->assertEquals($nodes[2], $last->get(0));
+    }
+
+    /**
+     * Test if children() retrieves proper result.
+     *
+     * @covers ::children()
+     */
+    public function testChildren()
+    {
+        $cData = $this->demoCData();
+        $comment1 = $this->demoComment();
+        $comment2 = $this->demoComment();
+        $comment3 = $this->demoComment();
+
+        $element1 = $this->demoElement()
+            ->insertAfter($cData)
+            ->insertAfter($comment1);
+        $element2 = $this->demoElement()
+            ->insertAfter($comment2);
+
+        $dom = (new Dom())
+            ->add($element1)
+            ->add($element2)
+            ->add($comment3);
+
+        $this->assertEquals([$cData, $comment1, $comment2], $dom->children()->get());
     }
 }
