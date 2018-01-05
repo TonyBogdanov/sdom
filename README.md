@@ -1,12 +1,15 @@
 # SDom
 
+[![ApiGen Docs](https://img.shields.io/badge/ApiGen-Docs-053368.svg)](https://tonybogdanov.github.io/sdom/)
+
 [![Latest Stable Version](https://poser.pugx.org/tonybogdanov/sdom/v/stable?format=flat)](https://packagist.org/packages/tonybogdanov/sdom)
 [![Latest Unstable Version](https://poser.pugx.org/tonybogdanov/sdom/v/unstable?format=flat)](https://packagist.org/packages/tonybogdanov/sdom)
 [![Build Status](https://travis-ci.org/TonyBogdanov/sdom.svg?branch=master)](https://travis-ci.org/TonyBogdanov/sdom)
 [![Coverage Status](https://coveralls.io/repos/github/TonyBogdanov/sdom/badge.svg?branch=master)](https://coveralls.io/github/TonyBogdanov/sdom?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/TonyBogdanov/sdom/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/TonyBogdanov/sdom/?branch=master)
+
 [![License](https://poser.pugx.org/tonybogdanov/sdom/license?format=flat)](https://packagist.org/packages/tonybogdanov/sdom)
-[![Buy Me a Coffee](http://static.tonybogdanov.com/github/coffee.svg)](http://ko-fi.co/1236KUKJNC96B)
+[![Buy Me Coffee](https://img.shields.io/badge/buy_me-coffee-00cae9.svg)](http://ko-fi.co/1236KUKJNC96B)
 
 Simple jQuery-like DOM representation in PHP.
 
@@ -14,9 +17,6 @@ Simple jQuery-like DOM representation in PHP.
 
 `composer require tonybogdanov/sdom`
 
-## Usage
-
-See `classes/Dom.php`.
-
 ## API Docs
 
+[https://tonybogdanov.github.io/sdom](https://tonybogdanov.github.io/sdom/)
