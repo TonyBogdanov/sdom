@@ -2,7 +2,7 @@
 
 namespace SDom\Test\Node;
 
-use Kevintweber\HtmlTokenizer\HtmlTokenizer;
+use Kevintweber\HtmlTokenizer\Tokens;
 use PHPUnit\Framework\TestCase;
 use SDom\Dom;
 use SDom\Node\CData;
@@ -52,6 +52,15 @@ class DomTest extends TestCase
     }
 
     /**
+     * @param array $expected
+     * @return array
+     */
+    protected function demoNoFilter(array $expected): array
+    {
+        return $expected;
+    }
+
+    /**
      * @return array[]
      */
     public function demoNodes(): array
@@ -69,16 +78,344 @@ class DomTest extends TestCase
     /**
      * @return array
      */
-    public function demoHTML(): array
+    public function demoContent(): array
     {
-        return [
-            [(string) $this->demoCData(), CData::class, 'demo', null, null],
-            [(string) $this->demoComment(), Comment::class, 'demo', null, null],
-            [(string) $this->demoDocType(), DocType::class, 'demo', null, null],
-            [(string) $this->demoText(), Text::class, 'demo', null, null],
-            [(string) $this->demoElement(true), Element::class, 'demo', false, ['a' => 'b', 'c' => 'd', 'e' => '']],
-            [(string) $this->demoVoidElement(true), Element::class, 'br', true, ['a' => 'b', 'c' => 'd', 'e' => '']]
-        ];
+        return array_merge([
+            [null, function ($content, array $nodes, callable $filter) {
+                $this->assertSame($filter([]), $nodes);
+            }],
+            [$this->demoCData(), function ($content, array $nodes, callable $filter) {
+                $this->assertSame($filter([$content]), $nodes);
+            }],
+            [$this->demoComment(), function ($content, array $nodes, callable $filter) {
+                $this->assertSame($filter([$content]), $nodes);
+            }],
+            [$this->demoDocType(), function ($content, array $nodes, callable $filter) {
+                $this->assertSame($filter([$content]), $nodes);
+            }],
+            [$this->demoText(), function ($content, array $nodes, callable $filter) {
+                $this->assertSame($filter([$content]), $nodes);
+            }],
+            [$this->demoElement(), function ($content, array $nodes, callable $filter) {
+                $this->assertSame($filter([$content]), $nodes);
+            }],
+            [$this->demoElement(true), function ($content, array $nodes, callable $filter) {
+                $this->assertSame($filter([$content]), $nodes);
+            }],
+            [$this->demoElement(false, true), function ($content, array $nodes, callable $filter) {
+                $this->assertSame($filter([$content]), $nodes);
+            }],
+            [$this->demoElement(true, true), function ($content, array $nodes, callable $filter) {
+                $this->assertSame($filter([$content]), $nodes);
+            }],
+            [$this->demoVoidElement(), function ($content, array $nodes, callable $filter) {
+                $this->assertSame($filter([$content]), $nodes);
+            }],
+            [$this->demoVoidElement(true), function ($content, array $nodes, callable $filter) {
+                $this->assertSame($filter([$content]), $nodes);
+            }],
+            [(function () {
+                $token = new Tokens\CData();
+                $token->parse((string) $this->demoCData());
+                return $token;
+            })(), function ($content, array $nodes, callable $filter) {
+                $this->assertSame(array_map(function (NodeInterface $node) {
+                    return (string) $node;
+                }, $filter([$this->demoCData()])), array_map(function (NodeInterface $node) {
+                    return (string) $node;
+                }, $nodes));
+            }],
+            [(function () {
+                $token = new Tokens\Comment();
+                $token->parse((string) $this->demoComment());
+                return $token;
+            })(), function ($content, array $nodes, callable $filter) {
+                $this->assertSame(array_map(function (NodeInterface $node) {
+                    return (string) $node;
+                }, $filter([$this->demoComment()])), array_map(function (NodeInterface $node) {
+                    return (string) $node;
+                }, $nodes));
+            }],
+            [(function () {
+                $token = new Tokens\DocType();
+                $token->parse((string) $this->demoDocType());
+                return $token;
+            })(), function ($content, array $nodes, callable $filter) {
+                $this->assertSame(array_map(function (NodeInterface $node) {
+                    return (string) $node;
+                }, $filter([$this->demoDocType()])), array_map(function (NodeInterface $node) {
+                    return (string) $node;
+                }, $nodes));
+            }],
+            [(function () {
+                $token = new Tokens\Text();
+                $token->parse((string) $this->demoText());
+                return $token;
+            })(), function ($content, array $nodes, callable $filter) {
+                $this->assertSame(array_map(function (NodeInterface $node) {
+                    return (string) $node;
+                }, $filter([$this->demoText()])), array_map(function (NodeInterface $node) {
+                    return (string) $node;
+                }, $nodes));
+            }],
+            [(function () {
+                $token = new Tokens\Element();
+                $token->parse((string) $this->demoElement());
+                return $token;
+            })(), function ($content, array $nodes, callable $filter) {
+                $this->assertSame(array_map(function (NodeInterface $node) {
+                    return (string) $node;
+                }, $filter([$this->demoElement()])), array_map(function (NodeInterface $node) {
+                    return (string) $node;
+                }, $nodes));
+            }],
+            [(function () {
+                $token = new Tokens\Element();
+                $token->parse((string) $this->demoElement(true));
+                return $token;
+            })(), function ($content, array $nodes, callable $filter) {
+                $this->assertSame(array_map(function (NodeInterface $node) {
+                    return (string) $node;
+                }, $filter([$this->demoElement(true)])), array_map(function (NodeInterface $node) {
+                    return (string) $node;
+                }, $nodes));
+            }],
+            [(function () {
+                $token = new Tokens\Element();
+                $token->parse((string) $this->demoElement(false, true));
+                return $token;
+            })(), function ($content, array $nodes, callable $filter) {
+                $this->assertSame(array_map(function (NodeInterface $node) {
+                    return (string) $node;
+                }, $filter([$this->demoElement(false, true)])), array_map(function (NodeInterface $node) {
+                    return (string) $node;
+                }, $nodes));
+            }],
+            [(function () {
+                $token = new Tokens\Element();
+                $token->parse((string) $this->demoElement(true, true));
+                return $token;
+            })(), function ($content, array $nodes, callable $filter) {
+                $this->assertSame(array_map(function (NodeInterface $node) {
+                    return (string) $node;
+                }, $filter([$this->demoElement(true, true)])), array_map(function (NodeInterface $node) {
+                    return (string) $node;
+                }, $nodes));
+            }],
+            [(function () {
+                $tokenCollection = new Tokens\TokenCollection();
+                $index = 0;
+
+                $token = new Tokens\CData();
+                $token->parse((string) $this->demoCData());
+                $tokenCollection[$index++] = $token;
+
+                $token = new Tokens\Comment();
+                $token->parse((string) $this->demoComment());
+                $tokenCollection[$index++] = $token;
+
+                $token = new Tokens\DocType();
+                $token->parse((string) $this->demoDocType());
+                $tokenCollection[$index++] = $token;
+
+                $token = new Tokens\Text();
+                $token->parse((string) $this->demoText());
+                $tokenCollection[$index++] = $token;
+
+                $token = new Tokens\Element();
+                $token->parse((string) $this->demoElement());
+                $tokenCollection[$index++] = $token;
+
+                $token = new Tokens\Element();
+                $token->parse((string) $this->demoElement(true));
+                $tokenCollection[$index++] = $token;
+
+                $token = new Tokens\Element();
+                $token->parse((string) $this->demoElement(false, true));
+                $tokenCollection[$index++] = $token;
+
+                $token = new Tokens\Element();
+                $token->parse((string) $this->demoElement(true, true));
+                $tokenCollection[$index++] = $token;
+
+                $token = new Tokens\Element();
+                $token->parse((string) $this->demoVoidElement());
+                $tokenCollection[$index++] = $token;
+
+                $token = new Tokens\Element();
+                $token->parse((string) $this->demoVoidElement(true));
+                $tokenCollection[$index++] = $token;
+
+                return $tokenCollection;
+            })(), function ($content, array $nodes, callable $filter, bool $ignoreDocType = false) {
+                $this->assertSame(
+                    array_map(function (NodeInterface $node) {
+                        return (string) $node;
+                    }, $filter(
+                        array_merge([
+                            $this->demoCData(),
+                            $this->demoComment()
+                        ], $ignoreDocType ? [] : [
+                            $this->demoDocType()
+                        ], [
+                            $this->demoText(),
+                            $this->demoElement(),
+                            $this->demoElement(true),
+                            $this->demoElement(false, true),
+                            $this->demoElement(true, true),
+                            $this->demoVoidElement(),
+                            $this->demoVoidElement(true)
+                        ])
+                    )), array_map(function (NodeInterface $node) {
+                    return (string) $node;
+                }, $nodes));
+            }]
+        ], array_map(function ($whitespace) {
+            return [str_repeat($whitespace, mt_rand(1, 10)), function ($content, array $nodes, callable $filter) {
+                $this->assertSame($filter([]), $nodes);
+            }];
+        }, ['', ' ',  "\t", "\n", "\r", "\0", "\x0B"]), [
+            [(string) $this->demoCData(), function ($content, array $nodes, callable $filter) {
+                $this->assertSame(array_map(function ($something) {
+                    return (string) $something;
+                }, $filter([$content])), array_map(function (NodeInterface $node) {
+                    return (string) $node;
+                }, $nodes));
+            }],
+            [(string) $this->demoComment(), function ($content, array $nodes, callable $filter) {
+                $this->assertSame(array_map(function ($something) {
+                    return (string) $something;
+                }, $filter([$content])), array_map(function (NodeInterface $node) {
+                    return (string) $node;
+                }, $nodes));
+            }],
+            [(string) $this->demoDocType(), function ($content, array $nodes, callable $filter) {
+                $this->assertSame(array_map(function ($something) {
+                    return (string) $something;
+                }, $filter([$content])), array_map(function (NodeInterface $node) {
+                    return (string) $node;
+                }, $nodes));
+            }],
+            [(string) $this->demoText(), function ($content, array $nodes, callable $filter) {
+                $this->assertSame(array_map(function ($something) {
+                    return (string) $something;
+                }, $filter([$content])), array_map(function (NodeInterface $node) {
+                    return (string) $node;
+                }, $nodes));
+            }],
+            [(string) $this->demoElement(), function ($content, array $nodes, callable $filter) {
+                $this->assertSame(array_map(function ($something) {
+                    return (string) $something;
+                }, $filter([$content])), array_map(function (NodeInterface $node) {
+                    return (string) $node;
+                }, $nodes));
+            }],
+            [(string) $this->demoElement(true), function ($content, array $nodes, callable $filter) {
+                $this->assertSame(array_map(function ($something) {
+                    return (string) $something;
+                }, $filter([$content])), array_map(function (NodeInterface $node) {
+                    return (string) $node;
+                }, $nodes));
+            }],
+            [(string) $this->demoElement(false, true), function ($content, array $nodes, callable $filter) {
+                $this->assertSame(array_map(function ($something) {
+                    return (string) $something;
+                }, $filter([$content])), array_map(function (NodeInterface $node) {
+                    return (string) $node;
+                }, $nodes));
+            }],
+            [(string) $this->demoElement(true, true), function ($content, array $nodes, callable $filter) {
+                $this->assertSame(array_map(function ($something) {
+                    return (string) $something;
+                }, $filter([$content])), array_map(function (NodeInterface $node) {
+                    return (string) $node;
+                }, $nodes));
+            }],
+            [(string) $this->demoVoidElement(), function ($content, array $nodes, callable $filter) {
+                $this->assertSame(array_map(function ($something) {
+                    return (string) $something;
+                }, $filter([$content])), array_map(function (NodeInterface $node) {
+                    return (string) $node;
+                }, $nodes));
+            }],
+            [(string) $this->demoVoidElement(true), function ($content, array $nodes, callable $filter) {
+                $this->assertSame(array_map(function ($something) {
+                    return (string) $something;
+                }, $filter([$content])), array_map(function (NodeInterface $node) {
+                    return (string) $node;
+                }, $nodes));
+            }], [
+                (new Dom())
+                    ->add($this->demoCData())
+                    ->add($this->demoComment())
+                    ->add($this->demoDocType())
+                    ->add($this->demoText())
+                    ->add($this->demoElement())
+                    ->add($this->demoElement(true))
+                    ->add($this->demoElement(false, true))
+                    ->add($this->demoElement(true, true))
+                    ->add($this->demoVoidElement())
+                    ->add($this->demoVoidElement(true)),
+                function (Dom $content, array $nodes, callable $filter) {
+                    $this->assertSame($filter(array_map(function (int $i) use ($content) {
+                        return $content->get($i);
+                    }, range(0, count($content) - 1))), $nodes);
+                }
+            ]
+        ]);
+    }
+
+    /**
+     * @return array
+     */
+    public function demoContentNoDocType(): array
+    {
+        $docTypeHTML = (string) $this->demoDocType();
+
+        $demo = $this->demoContent();
+        $newDemo = [];
+
+        foreach ($demo as $item) {
+            if (
+                $item[0] instanceof DocType ||
+                $item[0] instanceof Tokens\DocType ||
+                $item[0] === $docTypeHTML
+            ) {
+                continue;
+            }
+
+            if ($item[0] instanceof Tokens\TokenCollection) {
+                /**
+                 * @var int $index
+                 * @var Tokens\Token $token
+                 */
+                foreach ($item[0] as $index => $token) {
+                    if ($token instanceof Tokens\DocType) {
+                        unset($item[0][$index]);
+                    }
+                }
+
+                $callback = $item[1];
+                $item[1] = function ($content, array $nodes, callable $filter) use ($callback) {
+                    $callback($content, $nodes, $filter, true);
+                };
+            } else if ($item[0] instanceof Dom) {
+                $dom = new Dom();
+
+                /** @var NodeInterface $node */
+                foreach ($item[0]->get() as $node) {
+                    if (!$node instanceof DocType) {
+                        $dom->add($node);
+                    }
+                }
+
+                $item[0] = $dom;
+            }
+
+            $newDemo[] = $item;
+        }
+
+        return $newDemo;
     }
 
     /**
@@ -96,6 +433,21 @@ class DomTest extends TestCase
             [[]],
             [['<div />']], // an array - still invalid
             [new \stdClass()]
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function demoHTML(): array
+    {
+        return [
+            [(string) $this->demoCData(), CData::class, 'demo', null, null],
+            [(string) $this->demoComment(), Comment::class, 'demo', null, null],
+            [(string) $this->demoDocType(), DocType::class, 'demo', null, null],
+            [(string) $this->demoText(), Text::class, 'demo', null, null],
+            [(string) $this->demoElement(true), Element::class, 'demo', false, ['a' => 'b', 'c' => 'd', 'e' => '']],
+            [(string) $this->demoVoidElement(true), Element::class, 'br', true, ['a' => 'b', 'c' => 'd', 'e' => '']]
         ];
     }
 
@@ -130,285 +482,18 @@ class DomTest extends TestCase
     }
 
     /**
-     * Test construct or add with no argument or from NULL.
+     * Test constructing a Dom instance from various content types.
      *
-     * @param bool $construct
-     */
-    public function performTestConstructOrAddNull(bool $construct)
-    {
-        $dom = new Dom(); // can't test add() with no argument
-        $this->assertSame([], $dom->get());
-
-        $dom = $construct ? new Dom(null) : (new Dom())->add(null);
-        $this->assertSame([], $dom->get());
-    }
-
-    /**
-     * Test construct or add from another Dom.
+     * @covers ::__construct()
+     * @dataProvider demoContent()
      *
-     * @param bool $construct
-     */
-    public function performTestConstructOrAddDom(bool $construct)
-    {
-        $cData = $this->demoCData();
-        $comment = $this->demoComment();
-        $text = $this->demoText();
-
-        $dom = (new Dom())
-            ->add($cData)
-            ->add($comment)
-            ->add($text);
-
-        $new = $construct ? new Dom($dom) : (new Dom())->add($dom);
-        $this->assertSame([$cData, $comment, $text], $new->get());
-    }
-
-    /**
-     * Test construct or add from NodeInterface.
-     *
-     * @param bool $construct
-     * @param NodeInterface $node
-     */
-    public function performTestConstructOrAddNodeInterface(bool $construct, NodeInterface $node)
-    {
-        $dom = $construct ? new Dom($node) : (new Dom())->add($node);
-        $this->assertSame([$node], $dom->get());
-    }
-
-    /**
-     * Test construct or add from Token.
-     *
-     * @param bool $construct
-     * @param string $html
-     * @param string $nodeClass
-     * @param string $nodeContentOrTag
-     * @param bool|null $elementIsVoid
-     * @param array|null $elementAttributes
-     * @param Dom|null $testedDom
-     */
-    public function performTestConstructOrAddToken(
-        bool $construct,
-        string $html,
-        string $nodeClass,
-        string $nodeContentOrTag,
-        bool $elementIsVoid = null,
-        array $elementAttributes = null,
-        Dom $testedDom = null
-    ) {
-        if (!isset($testedDom)) {
-            $token = (new HtmlTokenizer())->parse($html)[0];
-            $testedDom = $construct ? new Dom($token) : (new Dom())->add($token);
-        }
-
-        $isElement = is_a($nodeClass, Element::class, true);
-
-        $this->assertCount(1, $testedDom);
-
-        $element = $testedDom->get(0);
-        $this->assertInstanceOf($nodeClass, $element);
-
-        $cotProperty = (new \ReflectionClass($element))->getProperty($isElement ? 'tag' : 'content');
-        $cotProperty->setAccessible(true);
-
-        $this->assertSame($nodeContentOrTag, $cotProperty->getValue($element));
-
-        if (!$isElement) {
-            return;
-        }
-
-        /** @var Element $element */
-
-        if (isset($elementIsVoid)) {
-            $this->assertSame($elementIsVoid, $element->isVoid());
-        }
-
-        if (isset($elementAttributes)) {
-            /**
-             * @var string $name
-             * @var string $value
-             */
-            foreach ($elementAttributes as $name => $value) {
-                $this->assertTrue($element->hasAttribute($name));
-                $this->assertSame($value, $element->getAttribute($name));
-            }
-        }
-    }
-
-    /**
-     * Test construct or add from TokenCollection.
-     *
-     * @param bool $construct
-     */
-    public function performTestConstructOrAddTokenCollection(bool $construct)
-    {
-        $demo = $this->demoHTML();
-        $html = '';
-
-        foreach ($demo as $item) {
-            $html .= $item[0];
-        }
-
-        $tokenCollection = (new HtmlTokenizer())->parse($html);
-        $dom = $construct ? new Dom($tokenCollection) : (new Dom())->add($tokenCollection);
-
-        $this->assertCount(count($demo), $dom);
-
-        for ($i = 0, $c = count($demo); $i < $c; $i++) {
-            $this->performTestConstructOrAddToken(...array_merge([$construct], $demo[$i], [$dom->eq($i)]));
-        }
-    }
-
-    /**
-     * Test construct or add from empty string or one with only whitespace. Should yield empty collection.
-     *
-     * @param bool $construct
-     */
-    public function performTestConstructOrAddWhitespace(bool $construct)
-    {
-        foreach (['', ' ',  "\t", "\n", "\r", "\0", "\x0B"] as $content) {
-            $html = str_repeat($content, mt_rand(1, 10));
-            $this->assertCount(0, $construct ? new Dom($html) : (new Dom())->add($html));
-        }
-    }
-
-    /**
-     * Test construct or add from HTML.
-     *
-     * @param bool $construct
-     */
-    public function performTestConstructOrAddHTML(bool $construct)
-    {
-        $demo = $this->demoHTML();
-        $html = '';
-
-        foreach ($demo as $item) {
-            $html .= $item[0];
-        }
-
-        $dom = $construct ? new Dom($html) : (new Dom())->add($html);
-
-        $this->assertCount(count($demo), $dom);
-
-        for ($i = 0, $c = count($demo); $i < $c; $i++) {
-            $this->performTestConstructOrAddToken(...array_merge([$construct], $demo[$i], [$dom->eq($i)]));
-        }
-    }
-
-    /**
-     * Test construct or add from invalid HTML.
-     *
-     * @param bool $construct
-     * @param string $html
-     */
-    public function performTestConstructOrAddInvalidHTML(bool $construct, string $html)
-    {
-        $construct ? new Dom($html) : (new Dom())->add($html);
-    }
-
-    /**
-     * Test construct or add from invalid content.
-     *
-     * @param bool $construct
      * @param $content
+     * @param callable $assert
      */
-    public function performTestConstructOrAddInvalidArgument(bool $construct, $content)
+    public function testConstruct($content, callable $assert)
     {
-        $construct ? new Dom($content) : (new Dom())->add($content);
-    }
-
-    /**
-     * Test construct with no argument or from NULL.
-     *
-     * @covers ::__construct()
-     */
-    public function testConstructNull()
-    {
-        $this->performTestConstructOrAddNull(true);
-    }
-
-    /**
-     * Test construct from another Dom.
-     *
-     * @covers ::__construct()
-     */
-    public function testConstructDom()
-    {
-        $this->performTestConstructOrAddDom(true);
-    }
-
-    /**
-     * Test construct from NodeInterface.
-     *
-     * @dataProvider demoNodes()
-     * @covers ::__construct()
-     *
-     * @param NodeInterface $node
-     */
-    public function testConstructNodeInterface(NodeInterface $node)
-    {
-        $this->performTestConstructOrAddNodeInterface(true, $node);
-    }
-
-    /**
-     * Test construct from Token.
-     *
-     * @dataProvider demoHTML()
-     * @covers ::__construct()
-     *
-     * @param string $html
-     * @param string $nodeClass
-     * @param string $nodeContentOrTag
-     * @param bool|null $elementIsVoid
-     * @param array|null $elementAttributes
-     * @param Dom|null $testedDom
-     */
-    public function testConstructToken(
-        string $html,
-        string $nodeClass,
-        string $nodeContentOrTag,
-        bool $elementIsVoid = null,
-        array $elementAttributes = null,
-        Dom $testedDom = null
-    ) {
-        $this->performTestConstructOrAddToken(
-            true,
-            $html,
-            $nodeClass,
-            $nodeContentOrTag,
-            $elementIsVoid,
-            $elementAttributes,
-            $testedDom
-        );
-    }
-
-    /**
-     * Test construct from TokenCollection.
-     *
-     * @covers ::__construct()
-     */
-    public function testConstructTokenCollection()
-    {
-        $this->performTestConstructOrAddTokenCollection(true);
-    }
-
-    /**
-     * Test construct from empty string or one with only whitespace. Should yield empty collection.
-     *
-     * @covers ::__construct()
-     */
-    public function testConstructWhitespace()
-    {
-        $this->performTestConstructOrAddWhitespace(true);
-    }
-
-    /**
-     * Test construct from HTML.
-     *
-     * @covers ::__construct()
-     */
-    public function testConstructHTML()
-    {
-        $this->performTestConstructOrAddHTML(true);
+        $dom = new Dom($content);
+        $assert($content, $dom->get(), [$this, 'demoNoFilter']);
     }
 
     /**
@@ -422,7 +507,7 @@ class DomTest extends TestCase
      */
     public function testConstructInvalidHTML(string $html)
     {
-        $this->performTestConstructOrAddInvalidHTML(true, $html);
+        (new Dom($html));
     }
 
     /**
@@ -436,102 +521,21 @@ class DomTest extends TestCase
      */
     public function testConstructInvalidArgument($content)
     {
-        $this->performTestConstructOrAddInvalidArgument(true, $content);
+        (new Dom($content));
     }
 
     /**
-     * Test add with no argument or from NULL.
+     * Test add()-ing to an empty Dom instance from various content types.
      *
-     * @covers ::add()
+     * @dataProvider demoContent()
+     *
+     * @param $content
+     * @param callable $assert
      */
-    public function testAddNull()
+    public function testAdd($content, callable $assert)
     {
-        $this->performTestConstructOrAddNull(false);
-    }
-
-    /**
-     * Test add from another Dom.
-     *
-     * @covers ::add()
-     */
-    public function testAddDom()
-    {
-        $this->performTestConstructOrAddDom(false);
-    }
-
-    /**
-     * Test add from NodeInterface.
-     *
-     * @dataProvider demoNodes()
-     * @covers ::add()
-     *
-     * @param NodeInterface $node
-     */
-    public function testAddNodeInterface(NodeInterface $node)
-    {
-        $this->performTestConstructOrAddNodeInterface(false, $node);
-    }
-
-    /**
-     * Test add from Token.
-     *
-     * @dataProvider demoHTML()
-     * @covers ::add()
-     *
-     * @param string $html
-     * @param string $nodeClass
-     * @param string $nodeContentOrTag
-     * @param bool|null $elementIsVoid
-     * @param array|null $elementAttributes
-     * @param Dom|null $testedDom
-     */
-    public function testAddToken(
-        string $html,
-        string $nodeClass,
-        string $nodeContentOrTag,
-        bool $elementIsVoid = null,
-        array $elementAttributes = null,
-        Dom $testedDom = null
-    ) {
-        $this->performTestConstructOrAddToken(
-            false,
-            $html,
-            $nodeClass,
-            $nodeContentOrTag,
-            $elementIsVoid,
-            $elementAttributes,
-            $testedDom
-        );
-    }
-
-    /**
-     * Test add from TokenCollection.
-     *
-     * @covers ::add()
-     */
-    public function testAddTokenCollection()
-    {
-        $this->performTestConstructOrAddTokenCollection(false);
-    }
-
-    /**
-     * Test add from empty string or one with only whitespace. Should yield empty collection.
-     *
-     * @covers ::add()
-     */
-    public function testAddWhitespace()
-    {
-        $this->performTestConstructOrAddWhitespace(false);
-    }
-
-    /**
-     * Test add from HTML.
-     *
-     * @covers ::add()
-     */
-    public function testAddHTML()
-    {
-        $this->performTestConstructOrAddHTML(false);
+        $dom = (new Dom())->add($content);
+        $assert($content, $dom->get(), [$this, 'demoNoFilter']);
     }
 
     /**
@@ -545,21 +549,21 @@ class DomTest extends TestCase
      */
     public function testAddInvalidHTML(string $html)
     {
-        $this->performTestConstructOrAddInvalidHTML(false, $html);
+        (new Dom())->add($html);
     }
 
     /**
      * Test add from invalid content.
      *
-     * @dataProvider demoInvalidContent()
      * @covers ::add()
+     * @dataProvider demoInvalidContent()
      * @expectedException \InvalidArgumentException
      *
      * @param $content
      */
     public function testAddInvalidArgument($content)
     {
-        $this->performTestConstructOrAddInvalidArgument(false, $content);
+        (new Dom())->add($content);
     }
 
     /**
@@ -788,34 +792,202 @@ class DomTest extends TestCase
         $this->assertSame([$cData, $comment1, $comment2], $dom->children()->get());
     }
 
-//    public function testAppend()
-//    {
-//        $element1 = $this->demoElement();
-//        $element2 = $this->demoElement();
-//
-//        $child1 = $this->demoElement();
-//        $child2 = $this->demoElement();
-//        $child3 = $this->demoElement();
-//
-//        $childDeep = $this->demoElement();
-//
-//        $dom = (new Dom($element1))->add($element2);
-//
-//        $dom->append($child1)
-////            ->append($child2)
-////            ->append((new Dom($child3))->append($childDeep))
-//        ;
-//
-//        dump($dom);
-//
-////        $this->assertTree([[
-////            $element1, [
-////                [$child1, []]
-////            ]
-////        ], [
-////            $element2, [
-////                [$child1, []]
-////            ]
-////        ]], $dom);
-//    }
+    /**
+     * Test append() against various content types.
+     *
+     * @covers ::append()
+     * @dataProvider demoContentNoDocType()
+     *
+     * @param $content
+     * @param callable $assert
+     */
+    public function testAppend($content, callable $assert)
+    {
+        $dom = (new Dom($this->demoElement()))
+            ->append($node = $this->demoCData())
+            ->append($content);
+
+        $assert($content, $dom->children()->get(), function (array $expected) use ($node) {
+            return array_merge([$node], $expected);
+        });
+    }
+
+    /**
+     * Test if complex tree structure is handled properly by append() in multi-element collections.
+     *
+     * @covers ::append()
+     */
+    public function testAppendMultiple()
+    {
+        $element1 = new Element('element1');
+        $element2 = new Element('element2');
+
+        $dummy1 = new Element('dummy1');
+        $dummy2 = new Element('dummy2');
+
+        $child1 = new Element('child1');
+        $child2 = new Element('child2');
+        $childDeep = new Element('child_deep');
+
+        $element1->insertAfter($dummy1);
+        $element2->insertAfter($dummy2);
+        $child2->insertAfter($childDeep);
+
+        $parentDom = (new Dom($element1))->add($element2);
+        $childDom = (new Dom($child1))->add($child2);
+
+        $parentDom->append($childDom);
+
+        $this->assertCount(2, $parentDom);
+        $this->assertCount(3, $parentDom->eq(0)->children());
+        $this->assertCount(3, $parentDom->eq(1)->children());
+
+        $this->assertSame($dummy1, $parentDom->eq(0)->children()->get(0));
+        $this->assertSame($child1, $parentDom->eq(0)->children()->get(1));
+        $this->assertSame($child2, $parentDom->eq(0)->children()->get(2));
+        $this->assertSame($childDeep, $parentDom->eq(0)->children()->eq(2)->children()->get(0));
+
+        // the second element from the collection receives cloned copies
+        $this->assertSame($dummy2, $parentDom->eq(1)->children()->get(0));
+        $this->assertNotSame($child1, $parentDom->eq(1)->children()->get(1));
+        $this->assertNotSame($child2, $parentDom->eq(1)->children()->get(2));
+        $this->assertNotSame($childDeep, $parentDom->eq(1)->children()->eq(2)->children()->get(0));
+        $this->assertSame((string) $child1, (string) $parentDom->eq(1)->children()->get(1));
+        $this->assertSame((string) $child2, (string) $parentDom->eq(1)->children()->get(2));
+        $this->assertSame((string) $childDeep, (string) $parentDom->eq(1)->children()->eq(2)->children()->get(0));
+    }
+
+    /**
+     * Test prepend() against various content types.
+     *
+     * @covers ::prepend()
+     * @dataProvider demoContentNoDocType()
+     *
+     * @param $content
+     * @param callable $assert
+     */
+    public function testPrepend($content, callable $assert)
+    {
+        $dom = (new Dom($this->demoElement()))
+            ->append($node = $this->demoCData())
+            ->prepend($content);
+
+        $assert($content, $dom->children()->get(), function (array $expected) use ($node) {
+            return array_merge($expected, [$node]);
+        });
+    }
+
+    /**
+     * Test if complex tree structure is handled properly by prepend() in multi-element collections.
+     *
+     * @covers ::prepend()
+     */
+    public function testPrependMultiple()
+    {
+        $element1 = new Element('element1');
+        $element2 = new Element('element2');
+
+        $dummy1 = new Element('dummy1');
+        $dummy2 = new Element('dummy2');
+
+        $child1 = new Element('child1');
+        $child2 = new Element('child2');
+        $childDeep = new Element('child_deep');
+
+        $element1->insertAfter($dummy1);
+        $element2->insertAfter($dummy2);
+        $child2->insertAfter($childDeep);
+
+        $parentDom = (new Dom($element1))->add($element2);
+        $childDom = (new Dom($child1))->add($child2);
+
+        $parentDom->prepend($childDom);
+
+        $this->assertCount(2, $parentDom);
+        $this->assertCount(3, $parentDom->eq(0)->children());
+        $this->assertCount(3, $parentDom->eq(1)->children());
+
+        $this->assertSame($child1, $parentDom->eq(0)->children()->get(0));
+        $this->assertSame($child2, $parentDom->eq(0)->children()->get(1));
+        $this->assertSame($dummy1, $parentDom->eq(0)->children()->get(2));
+        $this->assertSame($childDeep, $parentDom->eq(0)->children()->eq(1)->children()->get(0));
+
+        // the second element from the collection receives cloned copies
+        $this->assertSame($dummy2, $parentDom->eq(1)->children()->get(2));
+        $this->assertNotSame($child1, $parentDom->eq(1)->children()->get(0));
+        $this->assertNotSame($child2, $parentDom->eq(1)->children()->get(1));
+        $this->assertNotSame($childDeep, $parentDom->eq(1)->children()->eq(1)->children()->get(0));
+        $this->assertSame((string) $child1, (string) $parentDom->eq(1)->children()->get(0));
+        $this->assertSame((string) $child2, (string) $parentDom->eq(1)->children()->get(1));
+        $this->assertSame((string) $childDeep, (string) $parentDom->eq(1)->children()->eq(1)->children()->get(0));
+    }
+
+    /**
+     * @covers ::find()
+     * @covers ::traverseMatch()
+     */
+    public function testFind()
+    {
+        $domToStrings = function (Dom $dom) {
+            $strings = [];
+
+            foreach ($dom->get() as $node) {
+                $strings[] = (string) $node;
+            }
+
+            return $strings;
+        };
+
+        // common selectors - * (any), element (type), class & id (hash)
+        $dom = new Dom('<div><section id="intro"><h1>h1</h1><h2 class="tagline">h2</h2></section></div>');
+
+        // * (any)
+        $this->assertSame([
+            '<section id="intro"><h1>h1</h1><h2 class="tagline">h2</h2></section>',
+            '<h1>h1</h1>',
+            '<h2 class="tagline">h2</h2>'
+        ], $domToStrings($dom->find('*')));
+
+        // element (type)
+        $this->assertSame([
+            '<h1>h1</h1>',
+            '<h2 class="tagline">h2</h2>'
+        ], $domToStrings($dom->find('h1, h2')));
+
+        // class
+        $this->assertSame([
+            '<h2 class="tagline">h2</h2>'
+        ], $domToStrings($dom->find('.tagline')));
+
+        // id (hash)
+        $this->assertSame([
+            '<section id="intro"><h1>h1</h1><h2 class="tagline">h2</h2></section>',
+        ], $domToStrings($dom->find('#intro')));
+
+        // descendant selectors - E F, E > F
+        $dom = new Dom('<div><h2>h2</h2><article><h2>sub</h2><div><h2>inner</h2></div></article></div>');
+
+        // E F
+        $this->assertSame(['<h2>sub</h2>', '<h2>inner</h2>'], $domToStrings($dom->find('article h2')));
+        $this->assertSame(['<h2>inner</h2>'], $domToStrings($dom->find('div h2')));
+        $this->assertSame([], $domToStrings($dom->find('h2 h2')));
+
+        // E > F
+        $this->assertSame(['<h2>sub</h2>'], $domToStrings($dom->find('article > h2')));
+        $this->assertSame([], $domToStrings($dom->find('h2 > h2')));
+
+        // sibling selectors - E + F, E ~ F
+        $dom = new Dom('<div><a href="#">a</a><strong>strong</strong><em>em1</em><em>em2</em><i>i</i></div>');
+
+        // E + F
+        $this->assertSame(['<em>em2</em>'], $domToStrings($dom->find('em + em')));
+        $this->assertSame(['<strong>strong</strong>'], $domToStrings($dom->find('a + strong')));
+        $this->assertSame([], $domToStrings($dom->find('a + em')));
+
+        // E ~ F
+        $this->assertSame(['<i>i</i>'], $domToStrings($dom->find('a ~ i')));
+        $this->assertSame(['<em>em2</em>'], $domToStrings($dom->find('em ~ em')));
+        $this->assertSame(['<em>em1</em>', '<em>em2</em>'], $domToStrings($dom->find('strong ~ em')));
+        $this->assertSame([], $domToStrings($dom->find('em ~ strong')));
+    }
 }

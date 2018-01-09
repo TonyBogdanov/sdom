@@ -73,7 +73,8 @@ class ElementTest extends TestCase
         // with children
         $this->assertSame(
             (string) $this->demoElement(false, true),
-            (string) $this->demoElement()->insertAfter(new Element('a'))->insertAfter(new Element('b'))
+            (string) $this->demoElement()->insertAfter(new Element('a'))->insertAfter((new Element('b'))
+                ->insertAfter(new Element('c')))
         );
 
         // with attributes & children
@@ -84,7 +85,7 @@ class ElementTest extends TestCase
                 ->setAttribute('c', 'd')
                 ->setAttribute('e')
                 ->insertAfter(new Element('a'))
-                ->insertAfter(new Element('b'))
+                ->insertAfter((new Element('b'))->insertAfter(new Element('c')))
         );
     }
 
@@ -187,6 +188,16 @@ class ElementTest extends TestCase
             $this->assertTrue($batch[4]->isChild($batch[5]));
             $this->assertTrue($batch[4]->isChild($batch[6]));
         }
+    }
+
+    /**
+     * @covers ::getTag()
+     */
+    public function testGetTag()
+    {
+        $demo = $this->demoElement();
+
+        $this->assertSame('demo', $demo->getTag());
     }
 
     /**
@@ -388,21 +399,32 @@ class ElementTest extends TestCase
         $demo = $this->demoElement();
         $child1 = $this->demoComment();
         $child2 = $this->demoCData();
-        $child3 = $this->demoText();
+        $child3 = $this->demoElement();
+        $deepChild = $this->demoElement();
+        $deeperChild = $this->demoText();
 
-        $demo->insertAfter($child1)->insertAfter($child2)->insertAfter($child3);
+        $demo->insertAfter($child1)
+            ->insertAfter($child2)
+            ->insertAfter($child3->insertAfter($deepChild->insertAfter($deeperChild)));
 
-        $children = [];
-        foreach ($demo as $child) {
-            $children[] = $child;
-        }
-        $this->assertSame([$child1, $child2, $child3], $children);
+        $this->assertCount(3, $demo);
+        $this->assertCount(1, $child3);
+        $this->assertCount(1, $deepChild);
+        $this->assertSame($child1, $demo->getIterator()[0]);
+        $this->assertSame($child2, $demo->getIterator()[1]);
+        $this->assertSame($child3, $demo->getIterator()[2]);
+        $this->assertSame($deepChild, $child3->getIterator()[0]);
+        $this->assertSame($deeperChild, $deepChild->getIterator()[0]);
         $this->assertTrue($demo->isChild($child1));
         $this->assertTrue($demo->isChild($child2));
         $this->assertTrue($demo->isChild($child3));
+        $this->assertTrue($child3->isChild($deepChild));
+        $this->assertTrue($deepChild->isChild($deeperChild));
         $this->assertSame($demo, $child1->parent());
         $this->assertSame($demo, $child2->parent());
         $this->assertSame($demo, $child3->parent());
+        $this->assertSame($child3, $deepChild->parent());
+        $this->assertSame($deepChild, $deeperChild->parent());
 
         // test anchored
         $demo->clear()
@@ -410,17 +432,22 @@ class ElementTest extends TestCase
             ->insertAfter($child2)
             ->insertAfter($child3, $child1);
 
-        $children = [];
-        foreach ($demo as $child) {
-            $children[] = $child;
-        }
-        $this->assertSame([$child1, $child3, $child2], $children);
+        $this->assertCount(3, $demo);
+        $this->assertCount(1, $child3);
+        $this->assertCount(1, $deepChild);
+        $this->assertSame($child1, $demo->getIterator()[0]);
+        $this->assertSame($child3, $demo->getIterator()[1]);
+        $this->assertSame($child2, $demo->getIterator()[2]);
         $this->assertTrue($demo->isChild($child1));
         $this->assertTrue($demo->isChild($child2));
         $this->assertTrue($demo->isChild($child3));
+        $this->assertTrue($child3->isChild($deepChild));
+        $this->assertTrue($deepChild->isChild($deeperChild));
         $this->assertSame($demo, $child1->parent());
         $this->assertSame($demo, $child2->parent());
         $this->assertSame($demo, $child3->parent());
+        $this->assertSame($child3, $deepChild->parent());
+        $this->assertSame($deepChild, $deeperChild->parent());
 
         // test depth
         $deep = $this->demoElement()
@@ -438,9 +465,13 @@ class ElementTest extends TestCase
         $this->assertTrue($demo->isChild($child1));
         $this->assertTrue($demo->isChild($deep));
         $this->assertFalse($demo->isChild($child2));
+        $this->assertTrue($child3->isChild($deepChild));
+        $this->assertTrue($deepChild->isChild($deeperChild));
         $this->assertSame($demo, $child1->parent());
         $this->assertSame($demo, $deep->parent());
         $this->assertSame($deep, $child2->parent());
+        $this->assertSame($child3, $deepChild->parent());
+        $this->assertSame($deepChild, $deeperChild->parent());
     }
 
     /**
@@ -464,21 +495,32 @@ class ElementTest extends TestCase
         $demo = $this->demoElement();
         $child1 = $this->demoComment();
         $child2 = $this->demoCData();
-        $child3 = $this->demoText();
+        $child3 = $this->demoElement();
+        $deepChild = $this->demoElement();
+        $deeperChild = $this->demoText();
 
-        $demo->insertBefore($child1)->insertBefore($child2)->insertBefore($child3);
+        $demo->insertBefore($child1)
+            ->insertBefore($child2)
+            ->insertBefore($child3->insertAfter($deepChild->insertAfter($deeperChild)));
 
-        $children = [];
-        foreach ($demo as $child) {
-            $children[] = $child;
-        }
-        $this->assertSame([$child3, $child2, $child1], $children);
+        $this->assertCount(3, $demo);
+        $this->assertCount(1, $child3);
+        $this->assertCount(1, $deepChild);
+        $this->assertSame($child3, $demo->getIterator()[0]);
+        $this->assertSame($child2, $demo->getIterator()[1]);
+        $this->assertSame($child1, $demo->getIterator()[2]);
+        $this->assertSame($deepChild, $child3->getIterator()[0]);
+        $this->assertSame($deeperChild, $deepChild->getIterator()[0]);
         $this->assertTrue($demo->isChild($child1));
         $this->assertTrue($demo->isChild($child2));
         $this->assertTrue($demo->isChild($child3));
+        $this->assertTrue($child3->isChild($deepChild));
+        $this->assertTrue($deepChild->isChild($deeperChild));
         $this->assertSame($demo, $child1->parent());
         $this->assertSame($demo, $child2->parent());
         $this->assertSame($demo, $child3->parent());
+        $this->assertSame($child3, $deepChild->parent());
+        $this->assertSame($deepChild, $deeperChild->parent());
 
         // test anchored
         $demo->clear()
@@ -486,17 +528,22 @@ class ElementTest extends TestCase
             ->insertBefore($child2)
             ->insertBefore($child3, $child1);
 
-        $children = [];
-        foreach ($demo as $child) {
-            $children[] = $child;
-        }
-        $this->assertSame([$child2, $child3, $child1], $children);
+        $this->assertCount(3, $demo);
+        $this->assertCount(1, $child3);
+        $this->assertCount(1, $deepChild);
+        $this->assertSame($child2, $demo->getIterator()[0]);
+        $this->assertSame($child3, $demo->getIterator()[1]);
+        $this->assertSame($child1, $demo->getIterator()[2]);
         $this->assertTrue($demo->isChild($child1));
         $this->assertTrue($demo->isChild($child2));
         $this->assertTrue($demo->isChild($child3));
+        $this->assertTrue($child3->isChild($deepChild));
+        $this->assertTrue($deepChild->isChild($deeperChild));
         $this->assertSame($demo, $child1->parent());
         $this->assertSame($demo, $child2->parent());
         $this->assertSame($demo, $child3->parent());
+        $this->assertSame($child3, $deepChild->parent());
+        $this->assertSame($deepChild, $deeperChild->parent());
 
         // test depth
         $deep = $this->demoElement()
@@ -514,9 +561,13 @@ class ElementTest extends TestCase
         $this->assertTrue($demo->isChild($child1));
         $this->assertTrue($demo->isChild($deep));
         $this->assertFalse($demo->isChild($child2));
+        $this->assertTrue($child3->isChild($deepChild));
+        $this->assertTrue($deepChild->isChild($deeperChild));
         $this->assertSame($demo, $child1->parent());
         $this->assertSame($demo, $deep->parent());
         $this->assertSame($deep, $child2->parent());
+        $this->assertSame($child3, $deepChild->parent());
+        $this->assertSame($deepChild, $deeperChild->parent());
     }
 
     /**

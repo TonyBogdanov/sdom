@@ -8,6 +8,10 @@ use SDom\Node\DocType;
 use SDom\Node\Element;
 use SDom\Node\Text;
 
+/**
+ * Trait DemoGeneratorTrait
+ * @package SDom\Test\Helper
+ */
 trait DemoGeneratorTrait
 {
     /**
@@ -59,7 +63,7 @@ trait DemoGeneratorTrait
 
         if ($withChildren) {
             $demo->insertAfter(new Element('a'))
-                ->insertAfter(new Element('b'));
+                ->insertAfter((new Element('b'))->insertAfter(new Element('c')));
         }
 
         return $demo;

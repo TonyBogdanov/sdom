@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="stylesheet" href="resources/bootstrap.min.css">
+        <link rel="stylesheet" href="resources/style.css">
+
+        <title>
+            Class SDom\SelectorMatcher | SDom Docs
+        </title>
+    </head>
+
+    <body>
+<div id="navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <nav class="navbar">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="index.html">
+                                SDom Docs
+                            </a>
+                        </li>
+
+                            <li>
+                                <a href="classes.html">Classes</a>
+                            </li>
+
+                            <li>
+                                <a href="interfaces.html">Interfaces</a>
+                            </li>
+
+                            <li>
+                                <a href="traits.html">Traits</a>
+                            </li>
+
+
+
+                            <li class="separator"></li>
+                            <li>
+                                <a href="annotation-group-todo.html">
+                                    @Todo
+                                </a>
+                            </li>
+                            <li class="separator"></li>
+                            <li>
+                                <a href="annotation-group-deprecated.html">
+                                    @Deprecated
+                                </a>
+                            </li>
+                    </ul>
+
+                    <form id="search" class="pull-right">
+                        <input type="text" name="q" class="form-control text" placeholder="Search class, function or namespace" autofocus>
+                    </form>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+            <div id="breadcrumbs">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+
+
+<div class="pull-left type">
+    <span class="label label-success">Class</span>
+</div>
+
+<ol class="breadcrumb pull-left">
+        <li>
+            <a href="namespace-SDom.html">SDom</a>
+        </li>
+
+        <li class="backslash">\</li>
+        <li class="active">SelectorMatcher</li>
+</ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+    <h1>SelectorMatcher</h1>
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                A class for matching nodes against selector tokens.
+
+Class SelectorMatcher
+            </div>
+        </div>
+
+        <dl class="tree">
+            <dd>
+
+
+                    uses
+                        <a href="trait-SDom.SelectorMatcher.AttributeNodeTrait.html">SDom\SelectorMatcher\AttributeNodeTrait</a>, 
+                        <a href="trait-SDom.SelectorMatcher.ClassNodeTrait.html">SDom\SelectorMatcher\ClassNodeTrait</a>, 
+                        <a href="trait-SDom.SelectorMatcher.CombinedSelectorNodeTrait.html">SDom\SelectorMatcher\CombinedSelectorNodeTrait</a>, 
+                        <a href="trait-SDom.SelectorMatcher.ElementNodeTrait.html">SDom\SelectorMatcher\ElementNodeTrait</a>, 
+                        <a href="trait-SDom.SelectorMatcher.HashNodeTrait.html">SDom\SelectorMatcher\HashNodeTrait</a>
+            </dd>
+        </dl>
+
+
+
+    <div class="info">
+        
+
+            <br>
+            <a href="source-class-SDom.SelectorMatcher.html" class="open-source-code">Open source code</a>
+        <br>
+    </div>
+
+        <table class="summary table table-bordered table-responsive table-striped" id="methods">
+            <tr><th colspan="3">Methods Summary</th></tr>
+
+
+
+<tr id="_containsWord">
+
+    <td class="attributes col-md-1">
+        <code class="keyword">
+                 public static
+                
+                
+        </code>
+    </td>
+
+    <td class="name">
+        <div>
+            <a class="anchor pull-right" href="#_containsWord">#</a>
+            <code><a href="source-class-SDom.SelectorMatcher.html#39-42">containsWord</a>( <span> string <span class="property-name">$word</span> </span>, <span> string <span class="property-name">$sentence</span> </span> )</code>
+
+            <div class="description">
+                Check if the supplied word is found in the supplied sentence.
+
+E.g. the sentence begins with the word followed by whitespace, ends with the word preceded with whitespace,
+contains the word surrounded by whitespace or is equal to the word.
+
+The word itself may not contain whitespace.
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+    </td>
+</tr>
+
+
+
+<tr id="_match">
+
+    <td class="attributes col-md-1">
+        <code class="keyword">
+                 public 
+                
+                
+        </code>
+    </td>
+
+    <td class="name">
+        <div>
+            <a class="anchor pull-right" href="#_match">#</a>
+            <code><a href="source-class-SDom.SelectorMatcher.html#55-82">match</a>( <span> Symfony\Component\CssSelector\Node\NodeInterface <span class="property-name">$token</span> </span>, <span> <a href="class-SDom.Node.Element.html">SDom\Node\Element</a> <span class="property-name">$node</span> </span>, <span> <a href="class-SDom.Node.Element.html">SDom\Node\Element</a> <span class="property-name">$effectiveRoot</span> = <span class="php-keyword1">NULL</span></span> )</code>
+
+            <div class="description">
+                Match the supplied CSS token against the supplied Element node and return TRUE if it is matched.
+
+The $effectiveRoot specifies an Element node part of the hierarchy that is to be considered as root of the tree.
+Immediate child nodes will be treated as if they don't have a parent.
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+    </td>
+</tr>
+        </table>
+
+
+        <table class="summary table table-bordered table-responsive table-striped">
+            <tr><th>Methods used from <a href="trait-SDom.SelectorMatcher.AttributeNodeTrait.html#methods">SDom\SelectorMatcher\AttributeNodeTrait</a> trait</th></tr>
+            <tr>
+                <td>
+                    <code>
+                            <a href="trait-SDom.SelectorMatcher.AttributeNodeTrait.html#_matchAttributeNode">
+                                matchAttributeNode()
+                            </a>
+                    </code>
+                </td>
+            </tr>
+        </table>
+        <table class="summary table table-bordered table-responsive table-striped">
+            <tr><th>Methods used from <a href="trait-SDom.SelectorMatcher.ClassNodeTrait.html#methods">SDom\SelectorMatcher\ClassNodeTrait</a> trait</th></tr>
+            <tr>
+                <td>
+                    <code>
+                            <a href="trait-SDom.SelectorMatcher.ClassNodeTrait.html#_matchClassNode">
+                                matchClassNode()
+                            </a>
+                    </code>
+                </td>
+            </tr>
+        </table>
+        <table class="summary table table-bordered table-responsive table-striped">
+            <tr><th>Methods used from <a href="trait-SDom.SelectorMatcher.CombinedSelectorNodeTrait.html#methods">SDom\SelectorMatcher\CombinedSelectorNodeTrait</a> trait</th></tr>
+            <tr>
+                <td>
+                    <code>
+                            <a href="trait-SDom.SelectorMatcher.CombinedSelectorNodeTrait.html#_matchDescendantCombinedSelectorNode">
+                                matchDescendantCombinedSelectorNode()
+                            </a>
+                            <a href="trait-SDom.SelectorMatcher.CombinedSelectorNodeTrait.html#_matchChildCombinedSelectorNode">
+                                matchChildCombinedSelectorNode()
+                            </a>
+                            <a href="trait-SDom.SelectorMatcher.CombinedSelectorNodeTrait.html#_matchAdjacentCombinedSelectorNode">
+                                matchAdjacentCombinedSelectorNode()
+                            </a>
+                            <a href="trait-SDom.SelectorMatcher.CombinedSelectorNodeTrait.html#_matchGeneralSiblingCombinedSelectorNode">
+                                matchGeneralSiblingCombinedSelectorNode()
+                            </a>
+                            <a href="trait-SDom.SelectorMatcher.CombinedSelectorNodeTrait.html#_matchCombinedSelectorNode">
+                                matchCombinedSelectorNode()
+                            </a>
+                    </code>
+                </td>
+            </tr>
+        </table>
+        <table class="summary table table-bordered table-responsive table-striped">
+            <tr><th>Methods used from <a href="trait-SDom.SelectorMatcher.ElementNodeTrait.html#methods">SDom\SelectorMatcher\ElementNodeTrait</a> trait</th></tr>
+            <tr>
+                <td>
+                    <code>
+                            <a href="trait-SDom.SelectorMatcher.ElementNodeTrait.html#_matchElementNode">
+                                matchElementNode()
+                            </a>
+                    </code>
+                </td>
+            </tr>
+        </table>
+        <table class="summary table table-bordered table-responsive table-striped">
+            <tr><th>Methods used from <a href="trait-SDom.SelectorMatcher.HashNodeTrait.html#methods">SDom\SelectorMatcher\HashNodeTrait</a> trait</th></tr>
+            <tr>
+                <td>
+                    <code>
+                            <a href="trait-SDom.SelectorMatcher.HashNodeTrait.html#_matchHashNode">
+                                matchHashNode()
+                            </a>
+                    </code>
+                </td>
+            </tr>
+        </table>
+
+
+
+
+
+        <table class="summary table table-bordered table-responsive table-striped">
+            <tr>
+                <th>Properties used from <a href="trait-SDom.SelectorMatcher.AttributeNodeTrait.html#properties">SDom\SelectorMatcher\AttributeNodeTrait</a></th>
+            </tr>
+            <tr>
+                <td>
+                    <code>
+                    </code>
+                </td>
+            </tr>
+        </table>
+        <table class="summary table table-bordered table-responsive table-striped">
+            <tr>
+                <th>Properties used from <a href="trait-SDom.SelectorMatcher.ClassNodeTrait.html#properties">SDom\SelectorMatcher\ClassNodeTrait</a></th>
+            </tr>
+            <tr>
+                <td>
+                    <code>
+                    </code>
+                </td>
+            </tr>
+        </table>
+        <table class="summary table table-bordered table-responsive table-striped">
+            <tr>
+                <th>Properties used from <a href="trait-SDom.SelectorMatcher.CombinedSelectorNodeTrait.html#properties">SDom\SelectorMatcher\CombinedSelectorNodeTrait</a></th>
+            </tr>
+            <tr>
+                <td>
+                    <code>
+                    </code>
+                </td>
+            </tr>
+        </table>
+        <table class="summary table table-bordered table-responsive table-striped">
+            <tr>
+                <th>Properties used from <a href="trait-SDom.SelectorMatcher.ElementNodeTrait.html#properties">SDom\SelectorMatcher\ElementNodeTrait</a></th>
+            </tr>
+            <tr>
+                <td>
+                    <code>
+                    </code>
+                </td>
+            </tr>
+        </table>
+        <table class="summary table table-bordered table-responsive table-striped">
+            <tr>
+                <th>Properties used from <a href="trait-SDom.SelectorMatcher.HashNodeTrait.html#properties">SDom\SelectorMatcher\HashNodeTrait</a></th>
+            </tr>
+            <tr>
+                <td>
+                    <code>
+                    </code>
+                </td>
+            </tr>
+        </table>
+    <div id="footer">
+        Generated by <a href="https://github.com/apigen/apigen">ApiGen</a>
+    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="resources/jquery-3.2.1.min.js"></script>
+        <script src="resources/jquery-ui-1.12.1.min.js"></script>
+
+        <script src="elementlist.js"></script>
+        <script src="resources/main.js"></script>
+    </body>
+</html>
+
+

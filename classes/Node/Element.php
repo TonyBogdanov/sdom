@@ -87,6 +87,16 @@ class Element implements
     }
 
     /**
+     * Retrieve the tag name of the element.
+     *
+     * @return string
+     */
+    public function getTag(): string
+    {
+        return $this->tag;
+    }
+
+    /**
      * Return TRUE if the specified name exists as attribute.
      * The attribute name is lowercased.
      *
@@ -306,6 +316,45 @@ class Element implements
     }
 
     /**
+     * Retrieve a NodeInterface instance (immediate child node) for the specified index.
+     * Throw \OutOfBoundsException exception if the specified index is out of bounds.
+     *
+     * @param int $index
+     * @return NodeInterface
+     */
+    public function get(int $index): NodeInterface
+    {
+        $count = count($this);
+
+        if ($index < 0 || $index >= $count) {
+            throw new \OutOfBoundsException(sprintf(
+                'The requested node index %d is out of the child list bounds [%s].',
+                $index,
+                0 < $count ? '[0; ' . ($count - 1) . ']' : '(empty child list)'
+            ));
+        }
+
+        return $this->children[$index];
+    }
+
+    /**
+     * Retrieve the positional index of the specified NodeInterface in the list of immediate child nodes.
+     * If the target node is not an immediate child node of this one, an exception will be thrown.
+     *
+     * @param NodeInterface $node
+     * @return int
+     */
+    public function index(NodeInterface $node): int
+    {
+        $index = array_search($node, $this->children, true);
+        if (false === $index) {
+            throw new \InvalidArgumentException('The specified node is not an immediate child node.');
+        }
+
+        return $index;
+    }
+
+    /**
      * Remove the specified node from the list of immediate children of this node.
      * If the target node is not an immediate child node of this one, an exception will be thrown.
      * The node's detach() method will also be called to release the parent reference if such is set.
@@ -315,11 +364,7 @@ class Element implements
      */
     public function removeChild(NodeInterface $node): Element
     {
-        $index = array_search($node, $this->children, true);
-        if (false === $index) {
-            throw new \InvalidArgumentException('The specified node is not an immediate child node.');
-        }
-
+        $index = $this->index($node);
         $child = $this->children[$index];
 
         array_splice($this->children, $index, 1);

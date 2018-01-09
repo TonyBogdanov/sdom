@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 dir=$(dirname "$0")
-bin="$dir/../vendor/bin/apigen"
 
-$bin generate "$dir/../classes" --destination "$dir/../docs"
+cd "$dir/.."
+
+./vendor/bin/apigen generate --destination docs -- classes
