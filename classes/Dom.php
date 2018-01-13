@@ -216,6 +216,22 @@ class Dom implements
     }
 
     /**
+     * Return the concatenated string representation of all nodes in the collection.
+     *
+     * @return string
+     */
+    public function __toString(): string
+    {
+        $html = '';
+
+        foreach ($this->nodes as $node) {
+            $html .= (string) $node;
+        }
+
+        return $html;
+    }
+
+    /**
      * Return an \ArrayIterator with all nodes wrapped in a Dom instance.
      *
      * @return \ArrayIterator
@@ -341,11 +357,13 @@ class Dom implements
 
         /** @var NodeInterface $node */
         foreach ($this->nodes as $node) {
-            if ($node instanceof Element) {
-                /** @var NodeInterface $child */
-                foreach ($node as $child) {
-                    $dom->add($child);
-                }
+            if (!$node instanceof Element) {
+                continue;
+            }
+
+            /** @var NodeInterface $child */
+            foreach ($node as $child) {
+                $dom->add($child);
             }
         }
 
@@ -355,11 +373,11 @@ class Dom implements
     /**
      * Insert content after all immediate child nodes of each Element node in the collection.
      *
-     * If any node derived from the content already has a parent node, a cloned copy will be used instead.
-     * This means that, if appended to more than one Element node, references to each appended node will only point
-     * to the very first insertion.
+     * If any node derived from the content already has a parent node, a cloned copy will be used instead and it will
+     * be assigned a new parent node. This means that, if appended to more than one Element node, references to each
+     * appended node will only point to the very first insertion.
      *
-     * E.g. if the same node is appended to two or more Element nodes, it's reference will point to the node with the
+     * E.g. if the same node is appended to two or more Element nodes, its reference will point to the node with the
      * first Element as parent. Nodes appended to all other Element nodes will be cloned copies. The same rule applies
      * to child nodes of appended nodes, at any depth, as the whole sub-tree is cloned recursively.
      *
@@ -370,11 +388,13 @@ class Dom implements
     {
         /** @var NodeInterface $node */
         foreach ($this->nodes as $node) {
-            if ($node instanceof Element) {
-                /** @var NodeInterface $child */
-                foreach ((new static($content))->nodes as $child) {
-                    $node->insertAfter(null === $child->parent() ? $child : $child->clone());
-                }
+            if (!$node instanceof Element) {
+                continue;
+            }
+
+            /** @var NodeInterface $child */
+            foreach ((new static($content))->nodes as $child) {
+                $node->insertAfter(null === $child->parent() ? $child : $child->clone());
             }
         }
 
@@ -384,11 +404,11 @@ class Dom implements
     /**
      * Insert content before all immediate child nodes of each Element node in the collection.
      *
-     * If any node derived from the content already has a parent node, a cloned copy will be used instead.
-     * This means that, if prepended to more than one Element node, references to each prepended node will only point
-     * to the very first insertion.
+     * If any node derived from the content already has a parent node, a cloned copy will be used instead and it will
+     * be assigned a new parent node. This means that, if prepended to more than one Element node, references to each
+     * prepended node will only point to the very first insertion.
      *
-     * E.g. if the same node is prepended to two or more Element nodes, it's reference will point to the node with the
+     * E.g. if the same node is prepended to two or more Element nodes, its reference will point to the node with the
      * first Element as parent. Nodes prepended to all other Element nodes will be cloned copies. The same rule applies
      * to child nodes of prepended nodes, at any depth, as the whole sub-tree is cloned recursively.
      *
@@ -401,11 +421,85 @@ class Dom implements
     {
         /** @var NodeInterface $node */
         foreach ($this->nodes as $node) {
-            if ($node instanceof Element) {
-                /** @var NodeInterface $child */
-                foreach (array_reverse((new static($content))->nodes) as $child) {
-                    $node->insertBefore(null === $child->parent() ? $child : $child->clone());
-                }
+            if (!$node instanceof Element) {
+                continue;
+            }
+
+            /** @var NodeInterface $child */
+            foreach (array_reverse((new static($content))->nodes) as $child) {
+                $node->insertBefore(null === $child->parent() ? $child : $child->clone());
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Insert content before each Element node in the collection. If an element in the collection does not have a
+     * parent node it will be skipped / ignored.
+     *
+     * If any node derived from the content already has a parent node, a cloned copy will be used instead and it will
+     * be assigned a new parent node. This means that, if inserted before more than one Element node, references to
+     * each inserted node will only point to the very first successful insertion.
+     *
+     * E.g. if the same node is inserted before two or more Element nodes, its reference will point to the node
+     * inserted before the first eligible Element in the collection (an Element without a parent node is not eligible
+     * and will be ignored). Nodes inserted before all other Element nodes will be cloned copies. The same rule applies
+     * to child nodes of inserted nodes, at any depth, as the whole sub-tree is cloned recursively.
+     *
+     * @param $content
+     * @return Dom
+     */
+    public function before($content): Dom
+    {
+        /** @var NodeInterface $node */
+        foreach ($this->nodes as $node) {
+            if (!$node instanceof Element || null === $node->parent()) {
+                continue;
+            }
+
+            /** @var Element $parent */
+            $parent = $node->parent();
+
+            /** @var NodeInterface $child */
+            foreach (array_reverse((new static($content))->nodes) as $child) {
+                $parent->insertBefore(null === $child->parent() ? $child : $child->clone(), $node);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Insert content after each Element node in the collection. If an element in the collection does not have a
+     * parent node it will be skipped / ignored.
+     *
+     * If any node derived from the content already has a parent node, a cloned copy will be used instead and it will
+     * be assigned a new parent node. This means that, if inserted after more than one Element node, references to
+     * each inserted node will only point to the very first successful insertion.
+     *
+     * E.g. if the same node is inserted after two or more Element nodes, its reference will point to the node
+     * inserted after the first eligible Element in the collection (an Element without a parent node is not eligible
+     * and will be ignored). Nodes inserted after all other Element nodes will be cloned copies. The same rule applies
+     * to child nodes of inserted nodes, at any depth, as the whole sub-tree is cloned recursively.
+     *
+     * @param $content
+     * @return Dom
+     */
+    public function after($content): Dom
+    {
+        /** @var NodeInterface $node */
+        foreach ($this->nodes as $node) {
+            if (!$node instanceof Element || null === $node->parent()) {
+                continue;
+            }
+
+            /** @var Element $parent */
+            $parent = $node->parent();
+
+            /** @var NodeInterface $child */
+            foreach (array_reverse((new static($content))->nodes) as $child) {
+                $parent->insertAfter(null === $child->parent() ? $child : $child->clone(), $node);
             }
         }
 
@@ -440,5 +534,236 @@ class Dom implements
         }
 
         return $dom;
+    }
+
+    /**
+     * Adds the specified class(es) to each Element node in the collection.
+     *
+     * @param string $className
+     * @return Dom
+     */
+    public function addClass(string $className): Dom
+    {
+        $addClasses = preg_split('/\s+/', $className);
+
+        // bail if no classes to add
+        if (0 === count($addClasses)) {
+            return $this;
+        }
+
+        /** @var NodeInterface $node */
+        foreach ($this->nodes as $node) {
+            if (!$node instanceof Element) {
+                continue;
+            }
+
+            // if the node already has a "class" attribute, merge all classes & make sure the result is unique
+            if ($node->hasAttribute('class')) {
+                $currentClasses = preg_split('/\s+/', $node->getAttribute('class'));
+                $node->setAttribute('class', implode(' ', array_unique(array_merge($currentClasses, $addClasses))));
+            }
+
+            // if the node does not have a "class" attribute, directly set the new ones
+            else {
+                $node->setAttribute('class', implode(' ', $addClasses));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a single class, multiple classes, or all classes from each Element node in the collection.
+     *
+     * @param string|null $className
+     * @return Dom
+     */
+    public function removeClass(string $className = null): Dom
+    {
+        // if class to remove isn't set, remove all classes, but keep the "class" attribute present
+        if (!isset($className)) {
+            /** @var NodeInterface $node */
+            foreach ($this->nodes as $node) {
+                if (!$node instanceof Element || !$node->hasAttribute('class')) {
+                    continue;
+                }
+
+                $node->setAttribute('class', '');
+            }
+
+            return $this;
+        }
+
+        $removeClasses = preg_split('/\s+/', $className);
+
+        /** @var NodeInterface $node */
+        foreach ($this->nodes as $node) {
+            if (!$node instanceof Element || !$node->hasAttribute('class')) {
+                continue;
+            }
+
+            // set to the difference between the current classes and the remove ones
+            $currentClasses = preg_split('/\s+/', $node->getAttribute('class'));
+            $node->setAttribute('class', implode(' ', array_diff($currentClasses, $removeClasses)));
+        }
+
+        return $this;
+    }
+
+    /**
+     * Return TRUE if at least one of the Element nodes in the collection has the specified class assigned.
+     *
+     * @param string $className
+     * @return bool
+     */
+    public function hasClass(string $className): bool
+    {
+        /** @var NodeInterface $node */
+        foreach ($this->nodes as $node) {
+            if (!$node instanceof Element || !$node->hasAttribute('class')) {
+                continue;
+            }
+
+            if (SelectorMatcher::containsWord($className, $node->getAttribute('class'))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Get the value of an attribute for the first Element node in the collection.
+     * Set the value of an attribute for each Element node in the collection.
+     *
+     * @param string $name
+     * @param string|null $value
+     * @return string|null|$this
+     */
+    public function attr(string $name, string $value = null)
+    {
+        if (isset($value)) {
+            /** @var NodeInterface $node */
+            foreach ($this->nodes as $node) {
+                if (!$node instanceof Element) {
+                    continue;
+                }
+
+                $node->setAttribute($name, $value);
+            }
+
+            return $this;
+        }
+
+        /** @var NodeInterface $node */
+        foreach ($this->nodes as $node) {
+            if (!$node instanceof Element) {
+                continue;
+            }
+
+            return $node->getAttribute($name);
+        }
+
+        return null;
+    }
+
+    /**
+     * Remove an attribute from each Element node in the collection.
+     *
+     * @param string $name
+     * @return Dom
+     */
+    public function removeAttr(string $name): Dom
+    {
+        /** @var NodeInterface $node */
+        foreach ($this->nodes as $node) {
+            if (!$node instanceof Element) {
+                continue;
+            }
+
+            $node->removeAttribute($name);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get the combined text contents of each Element node in the collection, including their descendants.
+     * Set the content of each Element node in the collection to the specified text.
+     *
+     * @param string|null $text
+     * @return $this|string
+     */
+    public function text(string $text = null)
+    {
+        if (isset($text)) {
+            foreach ($this->nodes as $node) {
+                if (!$node instanceof Element) {
+                    continue;
+                }
+
+                $node->clear()->insertAfter(new Text($text));
+            }
+
+            return $this;
+        }
+
+        $text = '';
+
+        foreach ($this->nodes as $node) {
+            if ($node instanceof Text) {
+                $text .= (string) $node;
+            } else if ($node instanceof Element) {
+                /** @var Dom $dom */
+                foreach ((new static($node))->children() as $dom) {
+                    $text .= $dom->text();
+                }
+            }
+        }
+
+        return $text;
+    }
+
+    /**
+     * Get the HTML contents of the first Element node in the collection.
+     * Set the HTML contents of each Element node in the collection.
+     *
+     * @param string|null $html
+     * @return $this|string
+     */
+    public function html(string $html = null)
+    {
+        if (isset($html)) {
+            foreach ($this->nodes as $node) {
+                if (!$node instanceof Element) {
+                    continue;
+                }
+
+                $node->clear();
+
+                foreach ((new static($html))->nodes as $newNode) {
+                    $node->insertAfter($newNode);
+                }
+            }
+
+            return $this;
+        }
+
+        foreach ($this->nodes as $node) {
+            if (!$node instanceof Element) {
+                continue;
+            }
+
+            $html = '';
+
+            /** @var NodeInterface $childNode */
+            foreach ($node as $childNode) {
+                $html .= (string) $childNode;
+            }
+
+            return $html;
+        }
+
+        return '';
     }
 }
