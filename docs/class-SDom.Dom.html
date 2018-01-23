@@ -214,7 +214,7 @@ Child nodes will be treated, when matching, as if they don't have a parent node.
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#___construct">#</a>
-            <code><a href="source-class-SDom.Dom.html#132-216">__construct</a>( <span> mixed <span class="property-name">$content</span> = <span class="php-keyword1">NULL</span></span> )</code>
+            <code><a href="source-class-SDom.Dom.html#132-219">__construct</a>( <span> mixed <span class="property-name">$content</span> = <span class="php-keyword1">NULL</span></span> )</code>
 
             <div class="description">
                 Dom constructor.
@@ -244,6 +244,38 @@ Strings with all whitespace produce empty collections. Strings with invalid HTML
 
 
 
+<tr id="___toString">
+
+    <td class="attributes col-md-1">
+        <code class="keyword">
+                 public 
+                
+                
+        </code>
+    </td>
+
+    <td class="name">
+        <div>
+            <a class="anchor pull-right" href="#___toString">#</a>
+            <code><a href="source-class-SDom.Dom.html#226-235">__toString</a>( )</code>
+
+            <div class="description">
+                Return the concatenated string representation of all nodes in the collection.
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+    </td>
+</tr>
+
+
+
 <tr id="_getIterator">
 
     <td class="attributes col-md-1">
@@ -257,7 +289,7 @@ Strings with all whitespace produce empty collections. Strings with invalid HTML
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_getIterator">#</a>
-            <code><a href="source-class-SDom.Dom.html#223-228">getIterator</a>( )</code>
+            <code><a href="source-class-SDom.Dom.html#242-247">getIterator</a>( )</code>
 
             <div class="description">
                 Return an \ArrayIterator with all nodes wrapped in a Dom instance.
@@ -297,7 +329,7 @@ Strings with all whitespace produce empty collections. Strings with invalid HTML
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_count">#</a>
-            <code><a href="source-class-SDom.Dom.html#235-238">count</a>( )</code>
+            <code><a href="source-class-SDom.Dom.html#254-257">count</a>( )</code>
 
             <div class="description">
                 Return the number of wrapped nodes.
@@ -337,7 +369,7 @@ Strings with all whitespace produce empty collections. Strings with invalid HTML
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_get">#</a>
-            <code><a href="source-class-SDom.Dom.html#249-266">get</a>( <span> int <span class="property-name">$index</span> = <span class="php-keyword1">NULL</span></span> )</code>
+            <code><a href="source-class-SDom.Dom.html#268-285">get</a>( <span> int <span class="property-name">$index</span> = <span class="php-keyword1">NULL</span></span> )</code>
 
             <div class="description">
                 Retrieve a NodeInterface instance for the specified index, or an array of all NodeInterface instances if index
@@ -372,7 +404,7 @@ Throw \OutOfBoundsException exception if the specified index is out of bounds.
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_add">#</a>
-            <code><a href="source-class-SDom.Dom.html#274-284">add</a>( <span> <span class="property-name">$content</span> </span> )</code>
+            <code><a href="source-class-SDom.Dom.html#293-303">add</a>( <span> <span class="property-name">$content</span> </span> )</code>
 
             <div class="description">
                 Add the specified content to the end of the collection.
@@ -404,7 +436,7 @@ Throw \OutOfBoundsException exception if the specified index is out of bounds.
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_clear">#</a>
-            <code><a href="source-class-SDom.Dom.html#291-295">clear</a>( )</code>
+            <code><a href="source-class-SDom.Dom.html#310-314">clear</a>( )</code>
 
             <div class="description">
                 Clear the collection.
@@ -436,7 +468,7 @@ Throw \OutOfBoundsException exception if the specified index is out of bounds.
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_eq">#</a>
-            <code><a href="source-class-SDom.Dom.html#304-309">eq</a>( <span> int <span class="property-name">$index</span> </span> )</code>
+            <code><a href="source-class-SDom.Dom.html#323-328">eq</a>( <span> int <span class="property-name">$index</span> </span> )</code>
 
             <div class="description">
                 Retrieve a new Dom collection where the set of matched elements is reduced to the one at the specified index.
@@ -470,7 +502,7 @@ If the specified index is out of bounds an empty collection is returned.
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_first">#</a>
-            <code><a href="source-class-SDom.Dom.html#317-320">first</a>( )</code>
+            <code><a href="source-class-SDom.Dom.html#336-339">first</a>( )</code>
 
             <div class="description">
                 Retrieve a new Dom collection where the set of matched elements is reduced to the first in the set.
@@ -504,7 +536,7 @@ If the collection is empty a new empty collection is returned.
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_last">#</a>
-            <code><a href="source-class-SDom.Dom.html#328-331">last</a>( )</code>
+            <code><a href="source-class-SDom.Dom.html#347-350">last</a>( )</code>
 
             <div class="description">
                 Retrieve a new Dom collection where the set of matched elements is reduced to the last in the set.
@@ -538,7 +570,7 @@ If the collection is empty a new empty collection is returned.
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_children">#</a>
-            <code><a href="source-class-SDom.Dom.html#338-353">children</a>( )</code>
+            <code><a href="source-class-SDom.Dom.html#357-374">children</a>( )</code>
 
             <div class="description">
                 Get a new Dom collection with the immediate child nodes of each of the Element nodes in the collection.
@@ -570,16 +602,16 @@ If the collection is empty a new empty collection is returned.
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_append">#</a>
-            <code><a href="source-class-SDom.Dom.html#369-382">append</a>( <span> <span class="property-name">$content</span> </span> )</code>
+            <code><a href="source-class-SDom.Dom.html#390-405">append</a>( <span> <span class="property-name">$content</span> </span> )</code>
 
             <div class="description">
                 Insert content after all immediate child nodes of each Element node in the collection.
 
-If any node derived from the content already has a parent node, a cloned copy will be used instead.
-This means that, if appended to more than one Element node, references to each appended node will only point
-to the very first insertion.
+If any node derived from the content already has a parent node, a cloned copy will be used instead and it will
+be assigned a new parent node. This means that, if appended to more than one Element node, references to each
+appended node will only point to the very first insertion.
 
-E.g. if the same node is appended to two or more Element nodes, it's reference will point to the node with the
+E.g. if the same node is appended to two or more Element nodes, its reference will point to the node with the
 first Element as parent. Nodes appended to all other Element nodes will be cloned copies. The same rule applies
 to child nodes of appended nodes, at any depth, as the whole sub-tree is cloned recursively.
 
@@ -610,20 +642,104 @@ to child nodes of appended nodes, at any depth, as the whole sub-tree is cloned 
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_prepend">#</a>
-            <code><a href="source-class-SDom.Dom.html#400-413">prepend</a>( <span> <span class="property-name">$content</span> </span> )</code>
+            <code><a href="source-class-SDom.Dom.html#423-438">prepend</a>( <span> <span class="property-name">$content</span> </span> )</code>
 
             <div class="description">
                 Insert content before all immediate child nodes of each Element node in the collection.
 
-If any node derived from the content already has a parent node, a cloned copy will be used instead.
-This means that, if prepended to more than one Element node, references to each prepended node will only point
-to the very first insertion.
+If any node derived from the content already has a parent node, a cloned copy will be used instead and it will
+be assigned a new parent node. This means that, if prepended to more than one Element node, references to each
+prepended node will only point to the very first insertion.
 
-E.g. if the same node is prepended to two or more Element nodes, it's reference will point to the node with the
+E.g. if the same node is prepended to two or more Element nodes, its reference will point to the node with the
 first Element as parent. Nodes prepended to all other Element nodes will be cloned copies. The same rule applies
 to child nodes of prepended nodes, at any depth, as the whole sub-tree is cloned recursively.
 
 If the supplied content resolves to a collection of nodes, they will be prepended as a group, keeping the order.
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+    </td>
+</tr>
+
+
+
+<tr id="_before">
+
+    <td class="attributes col-md-1">
+        <code class="keyword">
+                 public 
+                
+                
+        </code>
+    </td>
+
+    <td class="name">
+        <div>
+            <a class="anchor pull-right" href="#_before">#</a>
+            <code><a href="source-class-SDom.Dom.html#456-474">before</a>( <span> <span class="property-name">$content</span> </span> )</code>
+
+            <div class="description">
+                Insert content before each Element node in the collection. If an element in the collection does not have a
+parent node it will be skipped / ignored.
+
+If any node derived from the content already has a parent node, a cloned copy will be used instead and it will
+be assigned a new parent node. This means that, if inserted before more than one Element node, references to
+each inserted node will only point to the very first successful insertion.
+
+E.g. if the same node is inserted before two or more Element nodes, its reference will point to the node
+inserted before the first eligible Element in the collection (an Element without a parent node is not eligible
+and will be ignored). Nodes inserted before all other Element nodes will be cloned copies. The same rule applies
+to child nodes of inserted nodes, at any depth, as the whole sub-tree is cloned recursively.
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+    </td>
+</tr>
+
+
+
+<tr id="_after">
+
+    <td class="attributes col-md-1">
+        <code class="keyword">
+                 public 
+                
+                
+        </code>
+    </td>
+
+    <td class="name">
+        <div>
+            <a class="anchor pull-right" href="#_after">#</a>
+            <code><a href="source-class-SDom.Dom.html#492-510">after</a>( <span> <span class="property-name">$content</span> </span> )</code>
+
+            <div class="description">
+                Insert content after each Element node in the collection. If an element in the collection does not have a
+parent node it will be skipped / ignored.
+
+If any node derived from the content already has a parent node, a cloned copy will be used instead and it will
+be assigned a new parent node. This means that, if inserted after more than one Element node, references to
+each inserted node will only point to the very first successful insertion.
+
+E.g. if the same node is inserted after two or more Element nodes, its reference will point to the node
+inserted after the first eligible Element in the collection (an Element without a parent node is not eligible
+and will be ignored). Nodes inserted after all other Element nodes will be cloned copies. The same rule applies
+to child nodes of inserted nodes, at any depth, as the whole sub-tree is cloned recursively.
 
 
 
@@ -652,11 +768,241 @@ If the supplied content resolves to a collection of nodes, they will be prepende
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_find">#</a>
-            <code><a href="source-class-SDom.Dom.html#422-443">find</a>( <span> string <span class="property-name">$selector</span> </span> )</code>
+            <code><a href="source-class-SDom.Dom.html#519-540">find</a>( <span> string <span class="property-name">$selector</span> </span> )</code>
 
             <div class="description">
                 Return a new Dom collection of all the descendants of each Element node in the current collection,
 filtered by the specified CSS selector.
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+    </td>
+</tr>
+
+
+
+<tr id="_addClass">
+
+    <td class="attributes col-md-1">
+        <code class="keyword">
+                 public 
+                
+                
+        </code>
+    </td>
+
+    <td class="name">
+        <div>
+            <a class="anchor pull-right" href="#_addClass">#</a>
+            <code><a href="source-class-SDom.Dom.html#548-576">addClass</a>( <span> string <span class="property-name">$className</span> </span> )</code>
+
+            <div class="description">
+                Adds the specified class(es) to each Element node in the collection.
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+    </td>
+</tr>
+
+
+
+<tr id="_removeClass">
+
+    <td class="attributes col-md-1">
+        <code class="keyword">
+                 public 
+                
+                
+        </code>
+    </td>
+
+    <td class="name">
+        <div>
+            <a class="anchor pull-right" href="#_removeClass">#</a>
+            <code><a href="source-class-SDom.Dom.html#584-614">removeClass</a>( <span> string <span class="property-name">$className</span> = <span class="php-keyword1">NULL</span></span> )</code>
+
+            <div class="description">
+                Remove a single class, multiple classes, or all classes from each Element node in the collection.
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+    </td>
+</tr>
+
+
+
+<tr id="_hasClass">
+
+    <td class="attributes col-md-1">
+        <code class="keyword">
+                 public 
+                
+                
+        </code>
+    </td>
+
+    <td class="name">
+        <div>
+            <a class="anchor pull-right" href="#_hasClass">#</a>
+            <code><a href="source-class-SDom.Dom.html#622-636">hasClass</a>( <span> string <span class="property-name">$className</span> </span> )</code>
+
+            <div class="description">
+                Return TRUE if at least one of the Element nodes in the collection has the specified class assigned.
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+    </td>
+</tr>
+
+
+
+<tr id="_attr">
+
+    <td class="attributes col-md-1">
+        <code class="keyword">
+                 public 
+                
+                
+        </code>
+    </td>
+
+    <td class="name">
+        <div>
+            <a class="anchor pull-right" href="#_attr">#</a>
+            <code><a href="source-class-SDom.Dom.html#646-671">attr</a>( <span> string <span class="property-name">$name</span> </span>, <span> string <span class="property-name">$value</span> = <span class="php-keyword1">NULL</span></span> )</code>
+
+            <div class="description">
+                Get the value of an attribute for the first Element node in the collection.
+
+Set the value of an attribute for each Element node in the collection.
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+    </td>
+</tr>
+
+
+
+<tr id="_removeAttr">
+
+    <td class="attributes col-md-1">
+        <code class="keyword">
+                 public 
+                
+                
+        </code>
+    </td>
+
+    <td class="name">
+        <div>
+            <a class="anchor pull-right" href="#_removeAttr">#</a>
+            <code><a href="source-class-SDom.Dom.html#679-691">removeAttr</a>( <span> string <span class="property-name">$name</span> </span> )</code>
+
+            <div class="description">
+                Remove an attribute from each Element node in the collection.
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+    </td>
+</tr>
+
+
+
+<tr id="_text">
+
+    <td class="attributes col-md-1">
+        <code class="keyword">
+                 public 
+                
+                
+        </code>
+    </td>
+
+    <td class="name">
+        <div>
+            <a class="anchor pull-right" href="#_text">#</a>
+            <code><a href="source-class-SDom.Dom.html#700-728">text</a>( <span> string <span class="property-name">$text</span> = <span class="php-keyword1">NULL</span></span> )</code>
+
+            <div class="description">
+                Get the combined text contents of each Element node in the collection, including their descendants.
+
+Set the content of each Element node in the collection to the specified text.
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+    </td>
+</tr>
+
+
+
+<tr id="_html">
+
+    <td class="attributes col-md-1">
+        <code class="keyword">
+                 public 
+                
+                
+        </code>
+    </td>
+
+    <td class="name">
+        <div>
+            <a class="anchor pull-right" href="#_html">#</a>
+            <code><a href="source-class-SDom.Dom.html#737-771">html</a>( <span> string <span class="property-name">$html</span> = <span class="php-keyword1">NULL</span></span> )</code>
+
+            <div class="description">
+                Get the HTML contents of the first Element node in the collection.
+
+Set the HTML contents of each Element node in the collection.
 
 
 

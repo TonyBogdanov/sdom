@@ -106,7 +106,7 @@
 </span></span><span class="l" id="line-35"><span class="php-comment">     */</span>
 </span><span class="l" id="line-36">    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> __toString(): string
 </span><span class="l" id="line-37">    {
-</span><span class="l" id="line-38">        <span class="php-keyword1">return</span> <span class="php-keyword2">htmlspecialchars</span>(<span class="php-var">$this</span>-&gt;content);
+</span><span class="l" id="line-38">        <span class="php-keyword1">return</span> <span class="php-keyword2">htmlentities</span>(<span class="php-var">$this</span>-&gt;content, ENT_NOQUOTES | ENT_SUBSTITUTE);
 </span><span class="l" id="line-39">    }
 </span><span class="l" id="line-40">
 </span><span class="l" id="line-41">    <span class="php-comment">/**

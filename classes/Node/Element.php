@@ -2,6 +2,12 @@
 
 namespace SDom\Node;
 
+/**
+ * Node representing an HTML element.
+ *
+ * Class Element
+ * @package SDom\Node
+ */
 class Element implements
     NodeInterface,
     \IteratorAggregate,

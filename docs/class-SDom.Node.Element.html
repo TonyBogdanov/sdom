@@ -95,6 +95,13 @@
                 <div class="col-md-12">
     <h1>Element</h1>
 
+        <div class="panel panel-default">
+            <div class="panel-body">
+                Node representing an HTML element.
+
+Class Element
+            </div>
+        </div>
 
         <dl class="tree">
             <dd>
@@ -121,6 +128,7 @@
     <div class="info">
         
 
+            <br>
             <a href="source-class-SDom.Node.Element.html" class="open-source-code">Open source code</a>
         <br>
     </div>
@@ -143,7 +151,7 @@
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#___construct">#</a>
-            <code><a href="source-class-SDom.Node.Element.html#42-45">__construct</a>( <span> string <span class="property-name">$tag</span> </span> )</code>
+            <code><a href="source-class-SDom.Node.Element.html#48-51">__construct</a>( <span> string <span class="property-name">$tag</span> </span> )</code>
 
             <div class="description">
                 Element constructor.
@@ -175,7 +183,7 @@
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#___toString">#</a>
-            <code><a href="source-class-SDom.Node.Element.html#50-79">__toString</a>( )</code>
+            <code><a href="source-class-SDom.Node.Element.html#56-85">__toString</a>( )</code>
 
             <div class="description">
                 
@@ -219,7 +227,7 @@
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#___clone">#</a>
-            <code><a href="source-class-SDom.Node.Element.html#84-87">__clone</a>( )</code>
+            <code><a href="source-class-SDom.Node.Element.html#90-93">__clone</a>( )</code>
 
             <div class="description">
                 
@@ -263,7 +271,7 @@
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_getTag">#</a>
-            <code><a href="source-class-SDom.Node.Element.html#94-97">getTag</a>( )</code>
+            <code><a href="source-class-SDom.Node.Element.html#100-103">getTag</a>( )</code>
 
             <div class="description">
                 Retrieve the tag name of the element.
@@ -295,7 +303,7 @@
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_hasAttribute">#</a>
-            <code><a href="source-class-SDom.Node.Element.html#106-109">hasAttribute</a>( <span> string <span class="property-name">$name</span> </span> )</code>
+            <code><a href="source-class-SDom.Node.Element.html#112-115">hasAttribute</a>( <span> string <span class="property-name">$name</span> </span> )</code>
 
             <div class="description">
                 Return TRUE if the specified name exists as attribute.
@@ -329,7 +337,7 @@ The attribute name is lowercased.
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_setAttribute">#</a>
-            <code><a href="source-class-SDom.Node.Element.html#120-124">setAttribute</a>( <span> string <span class="property-name">$name</span> </span>, <span> string <span class="property-name">$value</span> = <span class="php-quote">''</span></span> )</code>
+            <code><a href="source-class-SDom.Node.Element.html#126-130">setAttribute</a>( <span> string <span class="property-name">$name</span> </span>, <span> string <span class="property-name">$value</span> = <span class="php-quote">''</span></span> )</code>
 
             <div class="description">
                 Set the specified value for the specified attribute name.
@@ -364,7 +372,7 @@ The attribute name is lowercased.
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_getAttribute">#</a>
-            <code><a href="source-class-SDom.Node.Element.html#133-140">getAttribute</a>( <span> string <span class="property-name">$name</span> </span> )</code>
+            <code><a href="source-class-SDom.Node.Element.html#139-146">getAttribute</a>( <span> string <span class="property-name">$name</span> </span> )</code>
 
             <div class="description">
                 Retrieve the value of the specified attribute name, or NULL if the attribute does not exist.
@@ -398,7 +406,7 @@ The attribute name is lowercased.
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_removeAttribute">#</a>
-            <code><a href="source-class-SDom.Node.Element.html#149-156">removeAttribute</a>( <span> string <span class="property-name">$name</span> </span> )</code>
+            <code><a href="source-class-SDom.Node.Element.html#155-162">removeAttribute</a>( <span> string <span class="property-name">$name</span> </span> )</code>
 
             <div class="description">
                 Remove an attribute with the specified name.
@@ -432,7 +440,7 @@ The attribute name is lowercased.
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_parent">#</a>
-            <code><a href="source-class-SDom.Node.Element.html#161-164">parent</a>( )</code>
+            <code><a href="source-class-SDom.Node.Element.html#167-170">parent</a>( )</code>
 
             <div class="description">
                 
@@ -476,7 +484,7 @@ The attribute name is lowercased.
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_attach">#</a>
-            <code><a href="source-class-SDom.Node.Element.html#169-193">attach</a>( <span> <a href="interface-SDom.Node.NodeInterface.html">SDom\Node\NodeInterface</a> <span class="property-name">$parent</span> </span> )</code>
+            <code><a href="source-class-SDom.Node.Element.html#175-199">attach</a>( <span> <a href="interface-SDom.Node.NodeInterface.html">SDom\Node\NodeInterface</a> <span class="property-name">$parent</span> </span> )</code>
 
             <div class="description">
                 
@@ -520,7 +528,7 @@ The attribute name is lowercased.
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_detach">#</a>
-            <code><a href="source-class-SDom.Node.Element.html#198-211">detach</a>( )</code>
+            <code><a href="source-class-SDom.Node.Element.html#204-217">detach</a>( )</code>
 
             <div class="description">
                 
@@ -564,7 +572,7 @@ The attribute name is lowercased.
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_clone">#</a>
-            <code><a href="source-class-SDom.Node.Element.html#216-241">clone</a>( )</code>
+            <code><a href="source-class-SDom.Node.Element.html#222-247">clone</a>( )</code>
 
             <div class="description">
                 
@@ -608,7 +616,7 @@ The attribute name is lowercased.
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_getIterator">#</a>
-            <code><a href="source-class-SDom.Node.Element.html#246-249">getIterator</a>( )</code>
+            <code><a href="source-class-SDom.Node.Element.html#252-255">getIterator</a>( )</code>
 
             <div class="description">
                 
@@ -652,7 +660,7 @@ The attribute name is lowercased.
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_count">#</a>
-            <code><a href="source-class-SDom.Node.Element.html#254-257">count</a>( )</code>
+            <code><a href="source-class-SDom.Node.Element.html#260-263">count</a>( )</code>
 
             <div class="description">
                 
@@ -696,7 +704,7 @@ The attribute name is lowercased.
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_insertAfter">#</a>
-            <code><a href="source-class-SDom.Node.Element.html#268-281">insertAfter</a>( <span> <a href="interface-SDom.Node.NodeInterface.html">SDom\Node\NodeInterface</a> <span class="property-name">$node</span> </span>, <span> <a href="interface-SDom.Node.NodeInterface.html">SDom\Node\NodeInterface</a> <span class="property-name">$after</span> = <span class="php-keyword1">NULL</span></span> )</code>
+            <code><a href="source-class-SDom.Node.Element.html#274-287">insertAfter</a>( <span> <a href="interface-SDom.Node.NodeInterface.html">SDom\Node\NodeInterface</a> <span class="property-name">$node</span> </span>, <span> <a href="interface-SDom.Node.NodeInterface.html">SDom\Node\NodeInterface</a> <span class="property-name">$after</span> = <span class="php-keyword1">NULL</span></span> )</code>
 
             <div class="description">
                 Insert content at the end of the list of child nodes, or after the specified target node.
@@ -731,7 +739,7 @@ Attach this node as parent to the inserted node.
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_insertBefore">#</a>
-            <code><a href="source-class-SDom.Node.Element.html#292-305">insertBefore</a>( <span> <a href="interface-SDom.Node.NodeInterface.html">SDom\Node\NodeInterface</a> <span class="property-name">$node</span> </span>, <span> <a href="interface-SDom.Node.NodeInterface.html">SDom\Node\NodeInterface</a> <span class="property-name">$before</span> = <span class="php-keyword1">NULL</span></span> )</code>
+            <code><a href="source-class-SDom.Node.Element.html#298-311">insertBefore</a>( <span> <a href="interface-SDom.Node.NodeInterface.html">SDom\Node\NodeInterface</a> <span class="property-name">$node</span> </span>, <span> <a href="interface-SDom.Node.NodeInterface.html">SDom\Node\NodeInterface</a> <span class="property-name">$before</span> = <span class="php-keyword1">NULL</span></span> )</code>
 
             <div class="description">
                 Insert content at the beginning of the list of child nodes, or before the specified target node.
@@ -766,7 +774,7 @@ Attach this node as parent to the inserted node.
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_isChild">#</a>
-            <code><a href="source-class-SDom.Node.Element.html#313-316">isChild</a>( <span> <a href="interface-SDom.Node.NodeInterface.html">SDom\Node\NodeInterface</a> <span class="property-name">$node</span> </span> )</code>
+            <code><a href="source-class-SDom.Node.Element.html#319-322">isChild</a>( <span> <a href="interface-SDom.Node.NodeInterface.html">SDom\Node\NodeInterface</a> <span class="property-name">$node</span> </span> )</code>
 
             <div class="description">
                 Returns TRUE if the specified node is an immediate child of the current node.
@@ -798,7 +806,7 @@ Attach this node as parent to the inserted node.
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_get">#</a>
-            <code><a href="source-class-SDom.Node.Element.html#325-338">get</a>( <span> int <span class="property-name">$index</span> </span> )</code>
+            <code><a href="source-class-SDom.Node.Element.html#331-344">get</a>( <span> int <span class="property-name">$index</span> </span> )</code>
 
             <div class="description">
                 Retrieve a NodeInterface instance (immediate child node) for the specified index.
@@ -832,7 +840,7 @@ Throw \OutOfBoundsException exception if the specified index is out of bounds.
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_index">#</a>
-            <code><a href="source-class-SDom.Node.Element.html#347-355">index</a>( <span> <a href="interface-SDom.Node.NodeInterface.html">SDom\Node\NodeInterface</a> <span class="property-name">$node</span> </span> )</code>
+            <code><a href="source-class-SDom.Node.Element.html#353-361">index</a>( <span> <a href="interface-SDom.Node.NodeInterface.html">SDom\Node\NodeInterface</a> <span class="property-name">$node</span> </span> )</code>
 
             <div class="description">
                 Retrieve the positional index of the specified NodeInterface in the list of immediate child nodes.
@@ -866,7 +874,7 @@ If the target node is not an immediate child node of this one, an exception will
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_removeChild">#</a>
-            <code><a href="source-class-SDom.Node.Element.html#365-377">removeChild</a>( <span> <a href="interface-SDom.Node.NodeInterface.html">SDom\Node\NodeInterface</a> <span class="property-name">$node</span> </span> )</code>
+            <code><a href="source-class-SDom.Node.Element.html#371-383">removeChild</a>( <span> <a href="interface-SDom.Node.NodeInterface.html">SDom\Node\NodeInterface</a> <span class="property-name">$node</span> </span> )</code>
 
             <div class="description">
                 Remove the specified node from the list of immediate children of this node.
@@ -901,7 +909,7 @@ The node's detach() method will also be called to release the parent reference i
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_clear">#</a>
-            <code><a href="source-class-SDom.Node.Element.html#384-392">clear</a>( )</code>
+            <code><a href="source-class-SDom.Node.Element.html#390-398">clear</a>( )</code>
 
             <div class="description">
                 Remove all child nodes.
@@ -933,7 +941,7 @@ The node's detach() method will also be called to release the parent reference i
     <td class="name">
         <div>
             <a class="anchor pull-right" href="#_isVoid">#</a>
-            <code><a href="source-class-SDom.Node.Element.html#399-402">isVoid</a>( )</code>
+            <code><a href="source-class-SDom.Node.Element.html#405-408">isVoid</a>( )</code>
 
             <div class="description">
                 Returns TRUE if the element's tag matches the list of void element tags.
@@ -968,11 +976,12 @@ The node's detach() method will also be called to release the parent reference i
 
     <td class="name">
         <code>
-            <a href="source-class-SDom.Node.Element.html#13-15" class="property-name">$void</a>
+            <a href="source-class-SDom.Node.Element.html#19-21" class="property-name">$void</a>
         </code>
         <div class="description">
             
 
+                <br>
         </div>
     </td>
     <td class="value">
@@ -1008,11 +1017,12 @@ The node's detach() method will also be called to release the parent reference i
 
     <td class="name">
         <code>
-            <a href="source-class-SDom.Node.Element.html#20" class="property-name">$tag</a>
+            <a href="source-class-SDom.Node.Element.html#26" class="property-name">$tag</a>
         </code>
         <div class="description">
             
 
+                <br>
         </div>
     </td>
     <td class="value">
@@ -1033,11 +1043,12 @@ The node's detach() method will also be called to release the parent reference i
 
     <td class="name">
         <code>
-            <a href="source-class-SDom.Node.Element.html#25" class="property-name">$parent</a>
+            <a href="source-class-SDom.Node.Element.html#31" class="property-name">$parent</a>
         </code>
         <div class="description">
             
 
+                <br>
         </div>
     </td>
     <td class="value">
@@ -1058,11 +1069,12 @@ The node's detach() method will also be called to release the parent reference i
 
     <td class="name">
         <code>
-            <a href="source-class-SDom.Node.Element.html#30" class="property-name">$attributes</a>
+            <a href="source-class-SDom.Node.Element.html#36" class="property-name">$attributes</a>
         </code>
         <div class="description">
             
 
+                <br>
         </div>
     </td>
     <td class="value">
@@ -1084,11 +1096,12 @@ The node's detach() method will also be called to release the parent reference i
 
     <td class="name">
         <code>
-            <a href="source-class-SDom.Node.Element.html#35" class="property-name">$children</a>
+            <a href="source-class-SDom.Node.Element.html#41" class="property-name">$children</a>
         </code>
         <div class="description">
             
 
+                <br>
         </div>
     </td>
     <td class="value">
