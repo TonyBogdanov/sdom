@@ -35,7 +35,7 @@ class Text implements NodeInterface
      */
     public function __toString(): string
     {
-        return htmlspecialchars($this->content);
+        return htmlentities($this->content, ENT_NOQUOTES | ENT_SUBSTITUTE);
     }
 
     /**

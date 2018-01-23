@@ -3,7 +3,6 @@
 namespace SDom\Test\Node;
 
 use PHPUnit\Framework\TestCase;
-use SDom\Node\Element;
 use SDom\Node\NodeInterface;
 use SDom\Node\Text;
 use SDom\Test\Helper\DemoGeneratorTrait;
@@ -19,16 +18,15 @@ class TextTest extends TestCase
 {
     use DemoGeneratorTrait;
 
-    const DEMO_RAW = 'demo <em>demo</em>';
-    const DEMO_ESCAPED = 'demo &lt;em&gt;demo&lt;/em&gt;';
+    const DEMO_RAW = 'demo "&mdash;" <em>d\'e\'mo</em>';
+    const DEMO_ESCAPED = 'demo "&amp;mdash;" &lt;em&gt;d\'e\'mo&lt;/em&gt;';
 
     /**
-     * @param Element|null $parent
      * @return Text
      */
-    protected function demo(Element $parent = null): Text
+    protected function demo(): Text
     {
-        return new Text(self::DEMO_RAW, $parent);
+        return new Text(self::DEMO_RAW);
     }
 
     /**

@@ -43,7 +43,7 @@ trait DemoGeneratorTrait
      */
     protected function demoText(): Text
     {
-        return new Text('demo');
+        return new Text('d"e" &mdash; \'m\'o');
     }
 
     /**

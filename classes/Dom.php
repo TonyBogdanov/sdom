@@ -199,7 +199,10 @@ class Dom implements
                 $this->nodes = [];
 
                 try {
-                    $tokenCollection = (new HtmlTokenizer())->parse($content);
+                    // the tokenizer does not recognize entities as HTML and represents them as text tokens
+                    // running the content through html_entity_decode prior ensures proper plain text representation
+                    // text nodes would then be run through htmlentities before being output as HTML
+                    $tokenCollection = (new HtmlTokenizer())->parse(html_entity_decode($content, ENT_NOQUOTES));
                 } catch (\Exception $e) {
                     throw static::createInvalidContentException($content);
                 }
