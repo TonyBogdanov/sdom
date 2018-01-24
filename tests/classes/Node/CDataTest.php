@@ -49,7 +49,7 @@ class CDataTest extends TestCase
      */
     public function testConstructAndToString()
     {
-        $this->assertSame('<![CDATA[demo]]>', (string) $this->demoCData());
+        $this->assertSame('<![CDATA[' . $this->demoMixedContent() . ']]>', (string) $this->demoCData());
     }
 
     /**

@@ -38,6 +38,13 @@ class Dom implements
     protected static $selectorMatcher;
 
     /**
+     * Singleton instance to an HTML tokenizer.
+     *
+     * @var HtmlTokenizer
+     */
+    protected static $tokenizer;
+
+    /**
      * Collection of nodes.
      *
      * @var NodeInterface[]
@@ -199,10 +206,10 @@ class Dom implements
                 $this->nodes = [];
 
                 try {
-                    // the tokenizer does not recognize entities as HTML and represents them as text tokens
-                    // running the content through html_entity_decode prior ensures proper plain text representation
-                    // text nodes would then be run through htmlentities before being output as HTML
-                    $tokenCollection = (new HtmlTokenizer())->parse(html_entity_decode($content, ENT_NOQUOTES));
+                    if (!isset(self::$tokenizer)) {
+                        self::$tokenizer = new HtmlTokenizer();
+                    }
+                    $tokenCollection = self::$tokenizer->parse($content);
                 } catch (\Exception $e) {
                     throw static::createInvalidContentException($content);
                 }

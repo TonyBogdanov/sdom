@@ -27,7 +27,10 @@ class Text implements NodeInterface
      */
     public function __construct(string $content)
     {
-        $this->content = $content;
+        // the tokenizer does not recognize entities as HTML and represents them as plain text tokens
+        // running the content through html_entity_decode ensures proper plain text representation
+        // text nodes would then be run through htmlentities in __toString before being output as HTML
+        $this->content = html_entity_decode($content, ENT_NOQUOTES);
     }
 
     /**

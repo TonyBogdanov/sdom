@@ -49,7 +49,7 @@ class CommentTest extends TestCase
      */
     public function testConstructAndToString()
     {
-        $this->assertSame('<!--demo-->', (string) $this->demoComment());
+        $this->assertSame('<!--' . $this->demoMixedContent() . '-->', (string) $this->demoComment());
     }
 
     /**

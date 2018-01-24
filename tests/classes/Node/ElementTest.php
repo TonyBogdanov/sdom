@@ -616,6 +616,74 @@ class ElementTest extends TestCase
     }
 
     /**
+     * Test if get() returns proper immediate child.
+     *
+     * @covers ::get()
+     */
+    public function testGet()
+    {
+        $immediateChild1 = null;
+        $immediateChild2 = null;
+
+        $parent = $this->demoElement(false, true, $immediateChild1, $immediateChild2);
+
+        $this->assertSame($immediateChild1, $parent->get(0));
+        $this->assertSame($immediateChild2, $parent->get(1));
+    }
+
+    /**
+     * Test if get() throws an \OutOfBoundsException for index below 0.
+     *
+     * @covers ::get()
+     * @expectedException \OutOfBoundsException
+     */
+    public function testGetOutOfBoundsBelow()
+    {
+        $this->demoElement(false, true)->get(-1);
+    }
+
+    /**
+     * Test if get() throws an \OutOfBoundsException for index above the number of children.
+     *
+     * @covers ::get()
+     * @expectedException \OutOfBoundsException
+     */
+    public function testGetOutOfBoundsAbove()
+    {
+        $this->demoElement(false, true)->get(2);
+    }
+
+    /**
+     * Test if index() returns proper immediate child index.
+     *
+     * @covers ::index()
+     */
+    public function testIndex()
+    {
+        $immediateChild1 = null;
+        $immediateChild2 = null;
+
+        $parent = $this->demoElement(false, true, $immediateChild1, $immediateChild2);
+
+        $this->assertSame(0, $parent->index($immediateChild1));
+        $this->assertSame(1, $parent->index($immediateChild2));
+    }
+
+    /**
+     * Test if index() throws \InvalidArgumentException if the specified node is not an immediate child.
+     *
+     * @covers ::index()
+     * @expectedException \InvalidArgumentException
+     */
+    public function testIndexInvalid()
+    {
+        $null = null;
+        $deepChild = null;
+
+        $this->demoElement(false, true, $null, $null, $deepChild)->index($deepChild);
+    }
+
+    /**
      * Test if calling removeChild() removes the specified immediate children.
      *
      * @covers ::removeChild()

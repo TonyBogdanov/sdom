@@ -18,8 +18,8 @@ class TextTest extends TestCase
 {
     use DemoGeneratorTrait;
 
-    const DEMO_RAW = 'demo "&mdash;" <em>d\'e\'mo</em>';
-    const DEMO_ESCAPED = 'demo "&amp;mdash;" &lt;em&gt;d\'e\'mo&lt;/em&gt;';
+    const DEMO_RAW = 'demo "&mdash;—" <em>d\'e\'mo</em>';
+    const DEMO_ESCAPED = 'demo "&mdash;&mdash;" &lt;em&gt;d\'e\'mo&lt;/em&gt;';
 
     /**
      * @return Text

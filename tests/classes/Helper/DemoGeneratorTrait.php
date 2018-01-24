@@ -15,11 +15,19 @@ use SDom\Node\Text;
 trait DemoGeneratorTrait
 {
     /**
+     * @return string
+     */
+    protected function demoMixedContent(): string
+    {
+        return 'd"e" &mdash; \'m\'o';
+    }
+
+    /**
      * @return CData
      */
     protected function demoCData(): CData
     {
-        return new CData('demo');
+        return new CData($this->demoMixedContent());
     }
 
     /**
@@ -27,7 +35,15 @@ trait DemoGeneratorTrait
      */
     protected function demoComment(): Comment
     {
-        return new Comment('demo');
+        return new Comment($this->demoMixedContent());
+    }
+
+    /**
+     * @return Text
+     */
+    protected function demoText(): Text
+    {
+        return new Text($this->demoMixedContent());
     }
 
     /**
@@ -38,21 +54,13 @@ trait DemoGeneratorTrait
         return new DocType('demo');
     }
 
-    /**
-     * @return Text
-     */
-    protected function demoText(): Text
-    {
-        return new Text('d"e" &mdash; \'m\'o');
-    }
-
-    /**
-     * @param bool $withAttributes
-     * @param bool $withChildren
-     * @return Element
-     */
-    protected function demoElement(bool $withAttributes = false, bool $withChildren = false): Element
-    {
+    protected function demoElement(
+        bool $withAttributes = false,
+        bool $withChildren = false,
+        Element &$childARef = null,
+        Element &$childBRef = null,
+        Element &$childCRef = null
+    ): Element {
         $demo = new Element('demo');
 
         if ($withAttributes) {
@@ -62,8 +70,11 @@ trait DemoGeneratorTrait
         }
 
         if ($withChildren) {
-            $demo->insertAfter(new Element('a'))
-                ->insertAfter((new Element('b'))->insertAfter(new Element('c')));
+            $childARef = new Element('a');
+            $childBRef = new Element('b');
+            $childCRef = new Element('c');
+
+            $demo->insertAfter($childARef)->insertAfter($childBRef->insertAfter($childCRef));
         }
 
         return $demo;

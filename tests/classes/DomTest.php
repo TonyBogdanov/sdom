@@ -116,12 +116,7 @@ class DomTest extends TestCase
             }],
             [(function () {
                 $token = new Tokens\CData();
-
-                /**
-                 * @see Dom::__construct (from string)
-                 */
-                $token->parse(html_entity_decode((string) $this->demoCData(), ENT_NOQUOTES));
-
+                $token->parse((string) $this->demoCData());
                 return $token;
             })(), function ($content, array $nodes, callable $filter) {
                 $this->assertSame(array_map(function (NodeInterface $node) {
@@ -132,12 +127,7 @@ class DomTest extends TestCase
             }],
             [(function () {
                 $token = new Tokens\Comment();
-
-                /**
-                 * @see Dom::__construct (from string)
-                 */
-                $token->parse(html_entity_decode((string) $this->demoComment(), ENT_NOQUOTES));
-
+                $token->parse((string) $this->demoComment());
                 return $token;
             })(), function ($content, array $nodes, callable $filter) {
                 $this->assertSame(array_map(function (NodeInterface $node) {
@@ -148,12 +138,7 @@ class DomTest extends TestCase
             }],
             [(function () {
                 $token = new Tokens\DocType();
-
-                /**
-                 * @see Dom::__construct (from string)
-                 */
-                $token->parse(html_entity_decode((string) $this->demoDocType(), ENT_NOQUOTES));
-
+                $token->parse((string) $this->demoDocType());
                 return $token;
             })(), function ($content, array $nodes, callable $filter) {
                 $this->assertSame(array_map(function (NodeInterface $node) {
@@ -164,12 +149,7 @@ class DomTest extends TestCase
             }],
             [(function () {
                 $token = new Tokens\Text();
-
-                /**
-                 * @see Dom::__construct (from string)
-                 */
-                $token->parse(html_entity_decode((string) $this->demoText(), ENT_NOQUOTES));
-
+                $token->parse((string) $this->demoText());
                 return $token;
             })(), function ($content, array $nodes, callable $filter) {
                 $this->assertSame(array_map(function (NodeInterface $node) {
@@ -180,12 +160,7 @@ class DomTest extends TestCase
             }],
             [(function () {
                 $token = new Tokens\Element();
-
-                /**
-                 * @see Dom::__construct (from string)
-                 */
-                $token->parse(html_entity_decode((string) $this->demoElement(), ENT_NOQUOTES));
-
+                $token->parse((string) $this->demoElement());
                 return $token;
             })(), function ($content, array $nodes, callable $filter) {
                 $this->assertSame(array_map(function (NodeInterface $node) {
@@ -196,12 +171,7 @@ class DomTest extends TestCase
             }],
             [(function () {
                 $token = new Tokens\Element();
-
-                /**
-                 * @see Dom::__construct (from string)
-                 */
-                $token->parse(html_entity_decode((string) $this->demoElement(true), ENT_NOQUOTES));
-
+                $token->parse((string) $this->demoElement(true));
                 return $token;
             })(), function ($content, array $nodes, callable $filter) {
                 $this->assertSame(array_map(function (NodeInterface $node) {
@@ -212,12 +182,7 @@ class DomTest extends TestCase
             }],
             [(function () {
                 $token = new Tokens\Element();
-
-                /**
-                 * @see Dom::__construct (from string)
-                 */
-                $token->parse(html_entity_decode((string) $this->demoElement(false, true), ENT_NOQUOTES));
-
+                $token->parse((string) $this->demoElement(false, true));
                 return $token;
             })(), function ($content, array $nodes, callable $filter) {
                 $this->assertSame(array_map(function (NodeInterface $node) {
@@ -228,12 +193,7 @@ class DomTest extends TestCase
             }],
             [(function () {
                 $token = new Tokens\Element();
-
-                /**
-                 * @see Dom::__construct (from string)
-                 */
-                $token->parse(html_entity_decode((string) $this->demoElement(true, true), ENT_NOQUOTES));
-
+                $token->parse((string) $this->demoElement(true, true));
                 return $token;
             })(), function ($content, array $nodes, callable $filter) {
                 $this->assertSame(array_map(function (NodeInterface $node) {
@@ -247,83 +207,43 @@ class DomTest extends TestCase
                 $index = 0;
 
                 $token = new Tokens\CData();
-
-                /**
-                 * @see Dom::__construct (from string)
-                 */
-                $token->parse(html_entity_decode((string) $this->demoCData(), ENT_NOQUOTES));
+                $token->parse((string) $this->demoCData());
                 $tokenCollection[$index++] = $token;
 
                 $token = new Tokens\Comment();
-
-                /**
-                 * @see Dom::__construct (from string)
-                 */
-                $token->parse(html_entity_decode((string) $this->demoComment(), ENT_NOQUOTES));
+                $token->parse((string) $this->demoComment());
                 $tokenCollection[$index++] = $token;
 
                 $token = new Tokens\DocType();
-
-                /**
-                 * @see Dom::__construct (from string)
-                 */
-                $token->parse(html_entity_decode((string) $this->demoDocType(), ENT_NOQUOTES));
+                $token->parse((string) $this->demoDocType());
                 $tokenCollection[$index++] = $token;
 
                 $token = new Tokens\Text();
-
-                /**
-                 * @see Dom::__construct (from string)
-                 */
-                $token->parse(html_entity_decode((string) $this->demoText(), ENT_NOQUOTES));
+                $token->parse((string) $this->demoText());
                 $tokenCollection[$index++] = $token;
 
                 $token = new Tokens\Element();
-
-                /**
-                 * @see Dom::__construct (from string)
-                 */
-                $token->parse(html_entity_decode((string) $this->demoElement(), ENT_NOQUOTES));
+                $token->parse((string) $this->demoElement());
                 $tokenCollection[$index++] = $token;
 
                 $token = new Tokens\Element();
-
-                /**
-                 * @see Dom::__construct (from string)
-                 */
-                $token->parse(html_entity_decode((string) $this->demoElement(true), ENT_NOQUOTES));
+                $token->parse((string) $this->demoElement(true));
                 $tokenCollection[$index++] = $token;
 
                 $token = new Tokens\Element();
-
-                /**
-                 * @see Dom::__construct (from string)
-                 */
-                $token->parse(html_entity_decode((string) $this->demoElement(false, true), ENT_NOQUOTES));
+                $token->parse((string) $this->demoElement(false, true));
                 $tokenCollection[$index++] = $token;
 
                 $token = new Tokens\Element();
-
-                /**
-                 * @see Dom::__construct (from string)
-                 */
-                $token->parse(html_entity_decode((string) $this->demoElement(true, true), ENT_NOQUOTES));
+                $token->parse((string) $this->demoElement(true, true));
                 $tokenCollection[$index++] = $token;
 
                 $token = new Tokens\Element();
-
-                /**
-                 * @see Dom::__construct (from string)
-                 */
-                $token->parse(html_entity_decode((string) $this->demoVoidElement(), ENT_NOQUOTES));
+                $token->parse((string) $this->demoVoidElement());
                 $tokenCollection[$index++] = $token;
 
                 $token = new Tokens\Element();
-
-                /**
-                 * @see Dom::__construct (from string)
-                 */
-                $token->parse(html_entity_decode((string) $this->demoVoidElement(true), ENT_NOQUOTES));
+                $token->parse((string) $this->demoVoidElement(true));
                 $tokenCollection[$index + 1] = $token;
 
                 return $tokenCollection;
