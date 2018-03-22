@@ -1,6 +1,6 @@
 # SDom
 
-[![ApiGen Docs](https://img.shields.io/badge/ApiGen-Docs-053368.svg)](https://tonybogdanov.github.io/sdom/)
+[![ApiGen Docs](https://img.shields.io/badge/ApiGen-Docs-053368.svg)](https://tonybogdanov.github.io/sdom/docs/)
 
 [![Latest Stable Version](https://poser.pugx.org/tonybogdanov/sdom/v/stable?format=flat)](https://packagist.org/packages/tonybogdanov/sdom)
 [![Latest Unstable Version](https://poser.pugx.org/tonybogdanov/sdom/v/unstable?format=flat)](https://packagist.org/packages/tonybogdanov/sdom)
