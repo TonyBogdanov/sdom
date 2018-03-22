@@ -15,8 +15,22 @@ Simple jQuery-like DOM representation in PHP.
 
 ## Installation
 
-`composer require tonybogdanov/sdom`
+Install via [Composer](https://getcomposer.org):
+
+```sh
+composer require tonybogdanov/sdom
+```
+
+## Testing
+
+Run the tests:
+
+```sh
+./bin/run-tests.sh
+```
+
+[Check the Coverage](https://tonybogdanov.github.io/sdom/coverage/).
 
 ## API Docs
 
-[https://tonybogdanov.github.io/sdom](https://tonybogdanov.github.io/sdom/)
+[Check the Docs](https://tonybogdanov.github.io/sdom/docs/)

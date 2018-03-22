@@ -3,6 +3,7 @@
     "description": "Simple jQuery-like DOM representation in PHP",
     "type": "library",
     "require": {
+        "php" : "^7.1",
         "kevintweber/html-tokenizer": "0.4",
         "symfony/css-selector": "4.0.3"
     },
