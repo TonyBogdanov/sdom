@@ -2,13 +2,13 @@
 
 namespace SDom;
 
-use SDom\Node as Dom;
+use SDom\Node as DomNode;
 use SDom\SelectorMatcher\AttributeNodeTrait;
 use SDom\SelectorMatcher\ClassNodeTrait;
 use SDom\SelectorMatcher\CombinedSelectorNodeTrait;
 use SDom\SelectorMatcher\ElementNodeTrait;
 use SDom\SelectorMatcher\HashNodeTrait;
-use Symfony\Component\CssSelector\Node as Css;
+use Symfony\Component\CssSelector\Node as CssNode;
 
 /**
  * A class for matching nodes against selector tokens.
@@ -38,7 +38,7 @@ class SelectorMatcher
      */
     public static function containsWord(string $word, string $sentence): bool
     {
-        return in_array($word, preg_split('/\s+/', $sentence));
+        return in_array($word, preg_split('/\s+/', $sentence) ?: []);
     }
 
     /**
@@ -47,30 +47,33 @@ class SelectorMatcher
      * The $effectiveRoot specifies an Element node part of the hierarchy that is to be considered as root of the tree.
      * Immediate child nodes will be treated as if they don't have a parent.
      *
-     * @param Css\NodeInterface $token
-     * @param Dom\Element $node
-     * @param Dom\Element|null $effectiveRoot
+     * @param CssNode\NodeInterface $token
+     * @param DomNode\Element $node
+     * @param DomNode\Element|null $effectiveRoot
      * @return bool
      */
-    public function match(Css\NodeInterface $token, Dom\Element $node, Dom\Element $effectiveRoot = null): bool
-    {
+    public function match(
+        CssNode\NodeInterface $token,
+        DomNode\Element $node,
+        DomNode\Element $effectiveRoot = null
+    ): bool {
         switch (true) {
-            case $token instanceof Css\SelectorNode:
+            case $token instanceof CssNode\SelectorNode:
                 return $this->match($token->getTree(), $node, $effectiveRoot);
 
-            case $token instanceof Css\ElementNode:
+            case $token instanceof CssNode\ElementNode:
                 return $this->matchElementNode($token, $node);
 
-            case $token instanceof Css\AttributeNode:
+            case $token instanceof CssNode\AttributeNode:
                 return $this->matchAttributeNode($token, $node, $effectiveRoot);
 
-            case $token instanceof Css\ClassNode:
+            case $token instanceof CssNode\ClassNode:
                 return $this->matchClassNode($token, $node, $effectiveRoot);
 
-            case $token instanceof Css\HashNode:
+            case $token instanceof CssNode\HashNode:
                 return $this->matchHashNode($token, $node, $effectiveRoot);
 
-            case $token instanceof Css\CombinedSelectorNode:
+            case $token instanceof CssNode\CombinedSelectorNode:
                 return $this->matchCombinedSelectorNode($token, $node, $effectiveRoot);
 
             default:

@@ -304,6 +304,7 @@ class Element implements
             if (false === $index) {
                 throw new \InvalidArgumentException('Only immediate child nodes can be used as insertBefore anchor.');
             }
+            $index = (int) $index;
         }
 
         array_splice($this->children, $index, 0, [$node->attach($this)]);

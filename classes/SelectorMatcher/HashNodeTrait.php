@@ -3,8 +3,8 @@
 namespace SDom\SelectorMatcher;
 
 use SDom\Node\Element;
-use SDom\Node\NodeInterface;
 use Symfony\Component\CssSelector\Node\HashNode;
+use Symfony\Component\CssSelector\Node\NodeInterface;
 
 /**
  * @pattern E#myid

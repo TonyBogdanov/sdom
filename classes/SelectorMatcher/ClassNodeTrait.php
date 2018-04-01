@@ -3,9 +3,9 @@
 namespace SDom\SelectorMatcher;
 
 use SDom\Node\Element;
-use SDom\Node\NodeInterface;
 use SDom\SelectorMatcher;
 use Symfony\Component\CssSelector\Node\ClassNode;
+use Symfony\Component\CssSelector\Node\NodeInterface;
 
 /**
  * @pattern E.warning

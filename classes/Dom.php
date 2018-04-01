@@ -228,7 +228,9 @@ class Dom implements
                  * @var Tokens\Token $child
                  */
                 foreach ($content->getChildren() as $child) {
-                    $node->insertAfter((new static($child))->get(0));
+                    /** @var NodeInterface $childNode */
+                    $childNode = (new static($child))->get(0);
+                    $node->insertAfter($childNode);
                 }
 
                 $this->nodes = [$node];
