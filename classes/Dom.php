@@ -586,7 +586,7 @@ class Dom implements
         // get a detached clone of the first element node in the content
         /** @var Element $wrapper */
         $wrapper = static::findFirstElement((new static($content))->nodes);
-        if (!$wrapper) {
+        if (null === $wrapper) {
             return $this;
         }
         $wrapper = $wrapper->clone()->detach();
@@ -689,7 +689,7 @@ class Dom implements
             return $this;
         }
 
-        $addClasses = preg_split('/\s+/', $className);
+        $addClasses = preg_split('/\s+/', $className) ?: [];
 
         /** @var NodeInterface $node */
         foreach ($this->nodes as $node) {
@@ -700,7 +700,7 @@ class Dom implements
             // if the node already has a "class" attribute, merge all classes & make sure the result is unique
             if ($node->hasAttribute('class')) {
                 $currentClassName = trim($node->getAttribute('class'));
-                $currentClasses = '' === $currentClassName ? [] : preg_split('/\s+/', $currentClassName);
+                $currentClasses = '' === $currentClassName ? [] : (preg_split('/\s+/', $currentClassName) ?: []);
                 $node->setAttribute('class', implode(' ', array_unique(array_merge($currentClasses, $addClasses))));
             }
 
@@ -735,7 +735,7 @@ class Dom implements
             return $this;
         }
 
-        $removeClasses = preg_split('/\s+/', $className);
+        $removeClasses = preg_split('/\s+/', $className) ?: [];
 
         /** @var NodeInterface $node */
         foreach ($this->nodes as $node) {
@@ -744,7 +744,7 @@ class Dom implements
             }
 
             // set to the difference between the current classes and the remove ones
-            $currentClasses = preg_split('/\s+/', $node->getAttribute('class'));
+            $currentClasses = preg_split('/\s+/', $node->getAttribute('class')) ?: [];
             $node->setAttribute('class', implode(' ', array_diff($currentClasses, $removeClasses)));
         }
 

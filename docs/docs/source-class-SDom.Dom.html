@@ -657,7 +657,7 @@
 </span><span class="l" id="line-586">        <span class="php-comment">// get a detached clone of the first element node in the content</span>
 </span><span class="l" id="line-587">        <span class="php-comment">/** @var Element $wrapper */</span>
 </span><span class="l" id="line-588">        <span class="php-var">$wrapper</span> = <span class="php-keyword1">static</span>::findFirstElement((<span class="php-keyword1">new</span> <span class="php-keyword1">static</span>(<span class="php-var">$content</span>))-&gt;nodes);
-</span><span class="l" id="line-589">        <span class="php-keyword1">if</span> (!<span class="php-var">$wrapper</span>) {
+</span><span class="l" id="line-589">        <span class="php-keyword1">if</span> (<span class="php-keyword1">null</span> === <span class="php-var">$wrapper</span>) {
 </span><span class="l" id="line-590">            <span class="php-keyword1">return</span> <span class="php-var">$this</span>;
 </span><span class="l" id="line-591">        }
 </span><span class="l" id="line-592">        <span class="php-var">$wrapper</span> = <span class="php-var">$wrapper</span>-&gt;<span class="php-keyword1">clone</span>()-&gt;detach();
@@ -760,7 +760,7 @@
 </span><span class="l" id="line-689">            <span class="php-keyword1">return</span> <span class="php-var">$this</span>;
 </span><span class="l" id="line-690">        }
 </span><span class="l" id="line-691">
-</span><span class="l" id="line-692">        <span class="php-var">$addClasses</span> = <span class="php-keyword2">preg_split</span>(<span class="php-quote">'/\s+/'</span>, <span class="php-var">$className</span>);
+</span><span class="l" id="line-692">        <span class="php-var">$addClasses</span> = <span class="php-keyword2">preg_split</span>(<span class="php-quote">'/\s+/'</span>, <span class="php-var">$className</span>) ?: [];
 </span><span class="l" id="line-693">
 </span><span class="l" id="line-694">        <span class="php-comment">/** @var NodeInterface $node */</span>
 </span><span class="l" id="line-695">        <span class="php-keyword1">foreach</span> (<span class="php-var">$this</span>-&gt;nodes <span class="php-keyword1">as</span> <span class="php-var">$node</span>) {
@@ -771,7 +771,7 @@
 </span><span class="l" id="line-700">            <span class="php-comment">// if the node already has a &quot;class&quot; attribute, merge all classes &amp; make sure the result is unique</span>
 </span><span class="l" id="line-701">            <span class="php-keyword1">if</span> (<span class="php-var">$node</span>-&gt;hasAttribute(<span class="php-quote">'class'</span>)) {
 </span><span class="l" id="line-702">                <span class="php-var">$currentClassName</span> = <span class="php-keyword2">trim</span>(<span class="php-var">$node</span>-&gt;getAttribute(<span class="php-quote">'class'</span>));
-</span><span class="l" id="line-703">                <span class="php-var">$currentClasses</span> = <span class="php-quote">''</span> === <span class="php-var">$currentClassName</span> ? [] : <span class="php-keyword2">preg_split</span>(<span class="php-quote">'/\s+/'</span>, <span class="php-var">$currentClassName</span>);
+</span><span class="l" id="line-703">                <span class="php-var">$currentClasses</span> = <span class="php-quote">''</span> === <span class="php-var">$currentClassName</span> ? [] : (<span class="php-keyword2">preg_split</span>(<span class="php-quote">'/\s+/'</span>, <span class="php-var">$currentClassName</span>) ?: []);
 </span><span class="l" id="line-704">                <span class="php-var">$node</span>-&gt;setAttribute(<span class="php-quote">'class'</span>, <span class="php-keyword2">implode</span>(<span class="php-quote">' '</span>, <span class="php-keyword2">array_unique</span>(<span class="php-keyword2">array_merge</span>(<span class="php-var">$currentClasses</span>, <span class="php-var">$addClasses</span>))));
 </span><span class="l" id="line-705">            }
 </span><span class="l" id="line-706">
@@ -806,7 +806,7 @@
 </span><span class="l" id="line-735">            <span class="php-keyword1">return</span> <span class="php-var">$this</span>;
 </span><span class="l" id="line-736">        }
 </span><span class="l" id="line-737">
-</span><span class="l" id="line-738">        <span class="php-var">$removeClasses</span> = <span class="php-keyword2">preg_split</span>(<span class="php-quote">'/\s+/'</span>, <span class="php-var">$className</span>);
+</span><span class="l" id="line-738">        <span class="php-var">$removeClasses</span> = <span class="php-keyword2">preg_split</span>(<span class="php-quote">'/\s+/'</span>, <span class="php-var">$className</span>) ?: [];
 </span><span class="l" id="line-739">
 </span><span class="l" id="line-740">        <span class="php-comment">/** @var NodeInterface $node */</span>
 </span><span class="l" id="line-741">        <span class="php-keyword1">foreach</span> (<span class="php-var">$this</span>-&gt;nodes <span class="php-keyword1">as</span> <span class="php-var">$node</span>) {
@@ -815,7 +815,7 @@
 </span><span class="l" id="line-744">            }
 </span><span class="l" id="line-745">
 </span><span class="l" id="line-746">            <span class="php-comment">// set to the difference between the current classes and the remove ones</span>
-</span><span class="l" id="line-747">            <span class="php-var">$currentClasses</span> = <span class="php-keyword2">preg_split</span>(<span class="php-quote">'/\s+/'</span>, <span class="php-var">$node</span>-&gt;getAttribute(<span class="php-quote">'class'</span>));
+</span><span class="l" id="line-747">            <span class="php-var">$currentClasses</span> = <span class="php-keyword2">preg_split</span>(<span class="php-quote">'/\s+/'</span>, <span class="php-var">$node</span>-&gt;getAttribute(<span class="php-quote">'class'</span>)) ?: [];
 </span><span class="l" id="line-748">            <span class="php-var">$node</span>-&gt;setAttribute(<span class="php-quote">'class'</span>, <span class="php-keyword2">implode</span>(<span class="php-quote">' '</span>, <span class="php-keyword2">array_diff</span>(<span class="php-var">$currentClasses</span>, <span class="php-var">$removeClasses</span>)));
 </span><span class="l" id="line-749">        }
 </span><span class="l" id="line-750">

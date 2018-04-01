@@ -360,7 +360,7 @@ class Element implements
             throw new \InvalidArgumentException('The specified node is not an immediate child node.');
         }
 
-        return $index;
+        return (int) $index;
     }
 
     /**
