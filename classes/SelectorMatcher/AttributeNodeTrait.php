@@ -3,6 +3,7 @@
 namespace SDom\SelectorMatcher;
 
 use SDom\Node\Element;
+use SDom\Node\NodeInterface;
 use SDom\SelectorMatcher;
 use Symfony\Component\CssSelector\Node\AttributeNode;
 
@@ -114,4 +115,12 @@ trait AttributeNodeTrait
 
         return $this->match($token->getSelector(), $node, $effectiveRoot);
     }
+
+    /**
+     * @param NodeInterface $token
+     * @param Element $node
+     * @param Element|null $effectiveRoot
+     * @return bool
+     */
+    abstract public function match(NodeInterface $token, Element $node, Element $effectiveRoot = null): bool;
 }

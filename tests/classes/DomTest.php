@@ -1188,6 +1188,44 @@ class DomTest extends TestCase
     }
 
     /**
+     * @covers ::wrapInner()
+     */
+    public function testWrapInner()
+    {
+        $root = new Element('root');
+        $parent1 = new Element('parent1');
+        $parent2 = new Element('parent2');
+        $child1 = new Element('child1');
+        $child2 = new Element('child2');
+
+        $wrapper = new Element('wrapper');
+
+        $root->insertAfter($parent1)->insertAfter($parent2);
+        $parent1->insertAfter($child1);
+        $parent2->insertAfter($child2);
+
+        (new Dom($parent1))
+            ->add($parent2)
+            ->wrapInner($wrapper);
+
+        $this->assertCount(2, $root);
+        $this->assertSame($parent1, $root->get(0));
+        $this->assertSame($parent2, $root->get(1));
+
+        $this->assertCount(1, $parent1);
+        $this->assertCount(1, $parent2);
+
+        $this->assertEquals($wrapper->clone()->clear(), $parent1->get(0)->clone()->clear());
+        $this->assertEquals($wrapper->clone()->clear(), $parent2->get(0)->clone()->clear());
+
+        $this->assertCount(1, $parent1->get(0));
+        $this->assertCount(1, $parent2->get(0));
+
+        $this->assertEquals($child1->clone()->clear(), $parent1->get(0)->get(0)->clone()->clear());
+        $this->assertEquals($child2->clone()->clear(), $parent2->get(0)->get(0)->clone()->clear());
+    }
+
+    /**
      * Test if complex tree structure is handled properly by prepend() in multi-element collections.
      *
      * @covers ::prepend()
@@ -1299,5 +1337,235 @@ class DomTest extends TestCase
         $this->assertSame(['<em>em2</em>'], $domToStrings($dom->find('em ~ em')));
         $this->assertSame(['<em>em1</em>', '<em>em2</em>'], $domToStrings($dom->find('strong ~ em')));
         $this->assertSame([], $domToStrings($dom->find('em ~ strong')));
+    }
+
+    /**
+     * @covers ::addClass()
+     */
+    public function testAddClassNoClass()
+    {
+        $demo = (new Dom('<div/>'))
+            ->add(new Dom('<div class/>'))
+            ->add(new Dom('<div class="a"/>'))
+            ->add(new Dom('<div class="a b c"/>'));
+
+        $demo->addClass('');
+
+        $this->assertFalse($demo->get(0)->hasAttribute('class'));
+        $this->assertTrue($demo->get(1)->hasAttribute('class'));
+        $this->assertTrue($demo->get(2)->hasAttribute('class'));
+        $this->assertTrue($demo->get(3)->hasAttribute('class'));
+
+        $this->assertSame(null, $demo->get(0)->getAttribute('class'));
+        $this->assertSame('', $demo->get(1)->getAttribute('class'));
+        $this->assertSame('a', $demo->get(2)->getAttribute('class'));
+        $this->assertSame('a b c', $demo->get(3)->getAttribute('class'));
+    }
+
+    /**
+     * @covers ::addClass()
+     */
+    public function testAddClassEmptyClass()
+    {
+        $demo = (new Dom('<div/>'))
+            ->add(new Dom('<div class/>'))
+            ->add(new Dom('<div class="a"/>'))
+            ->add(new Dom('<div class="a b c"/>'));
+
+        $demo->addClass(" \t\r\n");
+
+        $this->assertFalse($demo->get(0)->hasAttribute('class'));
+        $this->assertTrue($demo->get(1)->hasAttribute('class'));
+        $this->assertTrue($demo->get(2)->hasAttribute('class'));
+        $this->assertTrue($demo->get(3)->hasAttribute('class'));
+
+        $this->assertSame(null, $demo->get(0)->getAttribute('class'));
+        $this->assertSame('', $demo->get(1)->getAttribute('class'));
+        $this->assertSame('a', $demo->get(2)->getAttribute('class'));
+        $this->assertSame('a b c', $demo->get(3)->getAttribute('class'));
+    }
+
+    /**
+     * @covers ::addClass()
+     */
+    public function testAddClassSingleClass()
+    {
+        $demo = (new Dom('<div/>'))
+            ->add(new Dom('<div class/>'))
+            ->add(new Dom('<div class="a"/>'))
+            ->add(new Dom('<div class="a b c"/>'))
+            ->add($this->demoComment()); // just for coverage
+
+        $demo->addClass('d');
+
+        $this->assertTrue($demo->get(0)->hasAttribute('class'));
+        $this->assertTrue($demo->get(1)->hasAttribute('class'));
+        $this->assertTrue($demo->get(2)->hasAttribute('class'));
+        $this->assertTrue($demo->get(3)->hasAttribute('class'));
+
+        $this->assertSame('d', $demo->get(0)->getAttribute('class'));
+        $this->assertSame('d', $demo->get(1)->getAttribute('class'));
+        $this->assertSame('a d', $demo->get(2)->getAttribute('class'));
+        $this->assertSame('a b c d', $demo->get(3)->getAttribute('class'));
+    }
+
+    /**
+     * @covers ::addClass()
+     *
+     * @return Dom
+     */
+    public function testAddClassMultipleClasses()
+    {
+        $demo = (new Dom('<div/>'))
+            ->add(new Dom('<div class/>'))
+            ->add(new Dom('<div class="a"/>'))
+            ->add(new Dom('<div class="a b c"/>'));
+
+        $demo->addClass('d c a');
+
+        $this->assertTrue($demo->get(0)->hasAttribute('class'));
+        $this->assertTrue($demo->get(1)->hasAttribute('class'));
+        $this->assertTrue($demo->get(2)->hasAttribute('class'));
+        $this->assertTrue($demo->get(3)->hasAttribute('class'));
+
+        $this->assertSame('d c a', $demo->get(0)->getAttribute('class'));
+        $this->assertSame('d c a', $demo->get(1)->getAttribute('class'));
+        $this->assertSame('a d c', $demo->get(2)->getAttribute('class'));
+        $this->assertSame('a b c d', $demo->get(3)->getAttribute('class'));
+
+        return $demo;
+    }
+
+    /**
+     * @covers ::removeClass()
+     */
+    public function testRemoveClassNoClass()
+    {
+        $demo = (new Dom('<div/>'))
+            ->add(new Dom('<div class/>'))
+            ->add(new Dom('<div class="a"/>'))
+            ->add(new Dom('<div class="a b c"/>'));
+
+        $demo->removeClass('');
+
+        $this->assertFalse($demo->get(0)->hasAttribute('class'));
+        $this->assertTrue($demo->get(1)->hasAttribute('class'));
+        $this->assertTrue($demo->get(2)->hasAttribute('class'));
+        $this->assertTrue($demo->get(3)->hasAttribute('class'));
+
+        $this->assertSame(null, $demo->get(0)->getAttribute('class'));
+        $this->assertSame('', $demo->get(1)->getAttribute('class'));
+        $this->assertSame('a', $demo->get(2)->getAttribute('class'));
+        $this->assertSame('a b c', $demo->get(3)->getAttribute('class'));
+    }
+
+    /**
+     * @covers ::removeClass()
+     */
+    public function testRemoveClassEmptyClass()
+    {
+        $demo = (new Dom('<div/>'))
+            ->add(new Dom('<div class/>'))
+            ->add(new Dom('<div class="a"/>'))
+            ->add(new Dom('<div class="a b c"/>'));
+
+        $demo->removeClass(" \t\r\n");
+
+        $this->assertFalse($demo->get(0)->hasAttribute('class'));
+        $this->assertTrue($demo->get(1)->hasAttribute('class'));
+        $this->assertTrue($demo->get(2)->hasAttribute('class'));
+        $this->assertTrue($demo->get(3)->hasAttribute('class'));
+
+        $this->assertSame(null, $demo->get(0)->getAttribute('class'));
+        $this->assertSame('', $demo->get(1)->getAttribute('class'));
+        $this->assertSame('a', $demo->get(2)->getAttribute('class'));
+        $this->assertSame('a b c', $demo->get(3)->getAttribute('class'));
+    }
+
+    /**
+     * @covers ::removeClass()
+     */
+    public function testRemoveClassSingleClass()
+    {
+        $demo = (new Dom('<div/>'))
+            ->add(new Dom('<div class/>'))
+            ->add(new Dom('<div class="a"/>'))
+            ->add(new Dom('<div class="a b c"/>'));
+
+        $demo->removeClass('a');
+
+        $this->assertFalse($demo->get(0)->hasAttribute('class'));
+        $this->assertTrue($demo->get(1)->hasAttribute('class'));
+        $this->assertTrue($demo->get(2)->hasAttribute('class'));
+        $this->assertTrue($demo->get(3)->hasAttribute('class'));
+
+        $this->assertSame(null, $demo->get(0)->getAttribute('class'));
+        $this->assertSame('', $demo->get(1)->getAttribute('class'));
+        $this->assertSame('', $demo->get(2)->getAttribute('class'));
+        $this->assertSame('b c', $demo->get(3)->getAttribute('class'));
+    }
+
+    /**
+     * @covers ::removeClass()
+     */
+    public function testRemoveClassAll()
+    {
+        $demo = (new Dom('<div/>'))
+            ->add(new Dom('<div class/>'))
+            ->add(new Dom('<div class="a"/>'))
+            ->add(new Dom('<div class="a b c"/>'));
+
+        $demo->removeClass();
+
+        $this->assertFalse($demo->get(0)->hasAttribute('class'));
+        $this->assertTrue($demo->get(1)->hasAttribute('class'));
+        $this->assertTrue($demo->get(2)->hasAttribute('class'));
+        $this->assertTrue($demo->get(3)->hasAttribute('class'));
+
+        $this->assertSame(null, $demo->get(0)->getAttribute('class'));
+        $this->assertSame('', $demo->get(1)->getAttribute('class'));
+        $this->assertSame('', $demo->get(2)->getAttribute('class'));
+        $this->assertSame('', $demo->get(3)->getAttribute('class'));
+    }
+
+    /**
+     * @covers ::removeClass()
+     */
+    public function testRemoveClassMultipleClasses()
+    {
+        $demo = (new Dom('<div/>'))
+            ->add(new Dom('<div class/>'))
+            ->add(new Dom('<div class="a"/>'))
+            ->add(new Dom('<div class="a b c"/>'));
+
+        $demo->removeClass('c a');
+
+        $this->assertFalse($demo->get(0)->hasAttribute('class'));
+        $this->assertTrue($demo->get(1)->hasAttribute('class'));
+        $this->assertTrue($demo->get(2)->hasAttribute('class'));
+        $this->assertTrue($demo->get(3)->hasAttribute('class'));
+
+        $this->assertSame(null, $demo->get(0)->getAttribute('class'));
+        $this->assertSame('', $demo->get(1)->getAttribute('class'));
+        $this->assertSame('', $demo->get(2)->getAttribute('class'));
+        $this->assertSame('b', $demo->get(3)->getAttribute('class'));
+    }
+
+    /**
+     * @covers ::hasClass()
+     */
+    public function testHasClass()
+    {
+        $this->assertTrue((new Dom('<div class="a"/>'))->hasClass('a'));
+        $this->assertTrue((new Dom('<div class="a b"/>'))->hasClass('a'));
+        $this->assertTrue((new Dom('<div class="a b"/>'))->hasClass('b'));
+        $this->assertTrue((new Dom('<div class="a b c"/>'))->hasClass('b'));
+
+        $this->assertFalse((new Dom('<div/>'))->hasClass('a'));
+        $this->assertFalse((new Dom('<div class="b"/>'))->hasClass('a'));
+
+        $this->assertFalse((new Dom($this->demoComment()))->hasClass('a'));
+        $this->assertFalse((new Dom($this->demoText()))->hasClass('a'));
+        $this->assertFalse((new Dom($this->demoDocType()))->hasClass('a'));
     }
 }

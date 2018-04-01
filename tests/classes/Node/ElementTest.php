@@ -210,7 +210,10 @@ class ElementTest extends TestCase
         $this->assertFalse($demo->hasAttribute('demo'));
 
         $demo->setAttribute('demo', 'demo');
+        $demo->setAttribute('noval');
+
         $this->assertTrue($demo->hasAttribute('demo'));
+        $this->assertTrue($demo->hasAttribute('noval'));
     }
 
     /**

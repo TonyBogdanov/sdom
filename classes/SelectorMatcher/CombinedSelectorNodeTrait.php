@@ -3,6 +3,7 @@
 namespace SDom\SelectorMatcher;
 
 use SDom\Node\Element;
+use SDom\Node\NodeInterface;
 use Symfony\Component\CssSelector\Node\CombinedSelectorNode;
 
 /**
@@ -211,4 +212,12 @@ trait CombinedSelectorNodeTrait
                 ));
         }
     }
+
+    /**
+     * @param NodeInterface $token
+     * @param Element $node
+     * @param Element|null $effectiveRoot
+     * @return bool
+     */
+    abstract public function match(NodeInterface $token, Element $node, Element $effectiveRoot = null): bool;
 }

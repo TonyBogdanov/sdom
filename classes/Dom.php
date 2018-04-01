@@ -625,6 +625,24 @@ class Dom implements
     }
 
     /**
+     * Wrap a clone of the supplied content around each child node (not only element nodes) of nodes in the collection.
+     *
+     * This function works exactly like wrap() except it wraps the children of the nodes in the collection instead.
+     *
+     * Return the original collection for chaining.
+     *
+     * @param $content
+     * @return Dom
+     */
+    public function wrapInner($content): Dom
+    {
+        foreach ($this->children() as $child) {
+            $child->wrap($content);
+        }
+        return $this;
+    }
+
+    /**
      * Return a new Dom collection of all the descendants of each Element node in the current collection,
      * filtered by the specified CSS selector.
      *
@@ -662,12 +680,14 @@ class Dom implements
      */
     public function addClass(string $className): Dom
     {
-        $addClasses = preg_split('/\s+/', $className);
+        $className = trim($className);
 
         // bail if no classes to add
-        if (0 === count($addClasses)) {
+        if ('' === $className) {
             return $this;
         }
+
+        $addClasses = preg_split('/\s+/', $className);
 
         /** @var NodeInterface $node */
         foreach ($this->nodes as $node) {
@@ -677,7 +697,8 @@ class Dom implements
 
             // if the node already has a "class" attribute, merge all classes & make sure the result is unique
             if ($node->hasAttribute('class')) {
-                $currentClasses = preg_split('/\s+/', $node->getAttribute('class'));
+                $currentClassName = trim($node->getAttribute('class'));
+                $currentClasses = '' === $currentClassName ? [] : preg_split('/\s+/', $currentClassName);
                 $node->setAttribute('class', implode(' ', array_unique(array_merge($currentClasses, $addClasses))));
             }
 
