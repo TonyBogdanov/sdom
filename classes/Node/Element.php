@@ -327,6 +327,7 @@ class Element implements
      *
      * @param int $index
      * @return NodeInterface
+     * @throws \OutOfBoundsException
      */
     public function get(int $index): NodeInterface
     {
@@ -349,6 +350,7 @@ class Element implements
      *
      * @param NodeInterface $node
      * @return int
+     * @throws \InvalidArgumentException
      */
     public function index(NodeInterface $node): int
     {

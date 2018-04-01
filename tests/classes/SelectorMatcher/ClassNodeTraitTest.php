@@ -4,8 +4,7 @@ namespace SDom\Test\SelectorMatcher;
 
 use PHPUnit\Framework\TestCase;
 use SDom\Dom;
-use SDom\SelectorMatcher\ClassNodeTrait;
-use SDom\Test\Helper\SelectorMatcherTraitMockTrait;
+use SDom\SelectorMatcher;
 use Symfony\Component\CssSelector\Node\ClassNode;
 use Symfony\Component\CssSelector\Node\ElementNode;
 
@@ -18,26 +17,51 @@ use Symfony\Component\CssSelector\Node\ElementNode;
  */
 class ClassNodeTraitTest extends TestCase
 {
-    use SelectorMatcherTraitMockTrait;
+    /**
+     * @var SelectorMatcher
+     */
+    protected static $matcher;
+
+    /**
+     * @inheritDoc
+     */
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+        self::$matcher = new SelectorMatcher();
+    }
 
     /**
      * @covers ::matchClassNode()
+     * 
+     * @throws \ReflectionException
      */
     public function testMatchClassNode()
     {
-        $this->mockTrait(ClassNodeTrait::class, 'matchClassNode');
+        $match = (new \ReflectionClass(SelectorMatcher::class))->getMethod('matchClassNode');
+        $match->setAccessible(true);
 
         $void = new ElementNode();
 
-        $this->assertFalse($this->invoke(new ClassNode($void, 'b'), (new Dom('<div/>'))->get(0)));
-        $this->assertFalse($this->invoke(new ClassNode($void, 'b'), (new Dom('<div class="a"/>'))->get(0)));
-        $this->assertFalse($this->invoke(new ClassNode($void, 'b'), (new Dom('<div class="a c"/>'))->get(0)));
-        $this->assertFalse($this->invoke(new ClassNode($void, 'b'), (new Dom('<div class="abc"/>'))->get(0)));
-        $this->assertFalse($this->invoke(new ClassNode($void, 'b'), (new Dom('<div class="bc"/>'))->get(0)));
-        $this->assertFalse($this->invoke(new ClassNode($void, 'b'), (new Dom('<div class="cb"/>'))->get(0)));
-        $this->assertTrue($this->invoke(new ClassNode($void, 'b'), (new Dom('<div class="b"/>'))->get(0)));
-        $this->assertTrue($this->invoke(new ClassNode($void, 'b'), (new Dom('<div class="a b"/>'))->get(0)));
-        $this->assertTrue($this->invoke(new ClassNode($void, 'b'), (new Dom('<div class="b c"/>'))->get(0)));
-        $this->assertTrue($this->invoke(new ClassNode($void, 'b'), (new Dom('<div class="a b c"/>'))->get(0)));
+        $this->assertFalse($match->invoke(self::$matcher, new ClassNode($void, 'b'),
+            (new Dom('<div/>'))->get(0)));
+        $this->assertFalse($match->invoke(self::$matcher, new ClassNode($void, 'b'),
+            (new Dom('<div class="a"/>'))->get(0)));
+        $this->assertFalse($match->invoke(self::$matcher, new ClassNode($void, 'b'),
+            (new Dom('<div class="a c"/>'))->get(0)));
+        $this->assertFalse($match->invoke(self::$matcher, new ClassNode($void, 'b'),
+            (new Dom('<div class="abc"/>'))->get(0)));
+        $this->assertFalse($match->invoke(self::$matcher, new ClassNode($void, 'b'),
+            (new Dom('<div class="bc"/>'))->get(0)));
+        $this->assertFalse($match->invoke(self::$matcher, new ClassNode($void, 'b'),
+            (new Dom('<div class="cb"/>'))->get(0)));
+        $this->assertTrue($match->invoke(self::$matcher, new ClassNode($void, 'b'),
+            (new Dom('<div class="b"/>'))->get(0)));
+        $this->assertTrue($match->invoke(self::$matcher, new ClassNode($void, 'b'),
+            (new Dom('<div class="a b"/>'))->get(0)));
+        $this->assertTrue($match->invoke(self::$matcher, new ClassNode($void, 'b'),
+            (new Dom('<div class="b c"/>'))->get(0)));
+        $this->assertTrue($match->invoke(self::$matcher, new ClassNode($void, 'b'),
+            (new Dom('<div class="a b c"/>'))->get(0)));
     }
 }

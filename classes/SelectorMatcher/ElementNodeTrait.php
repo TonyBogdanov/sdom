@@ -22,10 +22,9 @@ trait ElementNodeTrait
     /**
      * @param ElementNode $token
      * @param Element $node
-     * @param null|Element $effectiveRoot
      * @return bool
      */
-    protected function matchElementNode(ElementNode $token, Element $node, Element $effectiveRoot = null): bool
+    protected function matchElementNode(ElementNode $token, Element $node): bool
     {
         // target element tag name may be null, directly return true as ElementNode tokens have no sub-selectors
         if (null === $token->getElement()) {

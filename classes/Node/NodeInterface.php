@@ -47,7 +47,7 @@ interface NodeInterface
     public function attach(NodeInterface $parent): NodeInterface;
 
     /**
-     * Detach this node from it's parent, if such is set by both removing the parent node reference, and removing this
+     * Detach this node from it's parent, if such is set, by both removing the parent node reference, and removing this
      * node as a child node from the parent when applicable.
      *
      * @return $this

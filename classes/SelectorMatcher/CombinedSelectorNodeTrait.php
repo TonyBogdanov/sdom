@@ -43,8 +43,14 @@ trait CombinedSelectorNodeTrait
             return false;
         }
 
+        // node must match the sub-selector
+        if (!$this->match($token->getSubSelector(), $node, $effectiveRoot)) {
+            return false;
+        }
+
         $parent = $node;
 
+        // node must have a parent that matches the selector, anywhere up the chain
         do {
             /** @var Element $parent */
             $parent = $parent->parent();
@@ -76,6 +82,11 @@ trait CombinedSelectorNodeTrait
         /** @var Element $parent */
         $parent = $node->parent();
 
+        // node must match the sub-selector
+        if (!$this->match($token->getSubSelector(), $node, $effectiveRoot)) {
+            return false;
+        }
+
         // node's parent must match the selector
         return $this->match($token->getSelector(), $parent, $effectiveRoot);
     }
@@ -100,24 +111,22 @@ trait CombinedSelectorNodeTrait
         $parent = $node->parent();
 
         // node must have an immediately preceding sibling that matches the selector
-        try {
-            // don't bother if the node is the first child (no siblings on the left)
-            $index = $parent->index($node);
-            if (0 === $index) {
-                return false;
-            }
-
-            // don't bother if the sibling is not an Element node
-            $sibling = $parent->get($index - 1);
-            if (!$sibling instanceof Element) {
-                return false;
-            }
-
-            // match the selector
-            return $this->match($token->getSelector(), $sibling, $effectiveRoot);
-        } catch (\OutOfBoundsException|\InvalidArgumentException $e) {
+        // don't bother if the node is the first child (no siblings on the left)
+        // ignored \InvalidArgumentException as $node is always a child of $parent
+        $index = $parent->index($node);
+        if (0 === $index) {
             return false;
         }
+
+        // don't bother if the sibling is not an Element node
+        // ignored \OutOfBoundsException as $index will always be within the list of children
+        $sibling = $parent->get($index - 1);
+        if (!$sibling instanceof Element) {
+            return false;
+        }
+
+        // match the selector
+        return $this->match($token->getSelector(), $sibling, $effectiveRoot);
     }
 
     /**
@@ -140,32 +149,30 @@ trait CombinedSelectorNodeTrait
         $parent = $node->parent();
 
         // node must have a preceding sibling (may not be immediate) that matches the selector
-        try {
-            // don't bother if the node is the first child (no siblings on the left)
-            $index = $parent->index($node);
-            if (0 === $index) {
-                return false;
-            }
-
-            // test all preceding siblings & bail after the first successful match
-            for ($i = $index - 1; $i >= 0; $i--) {
-                // skip the sibling if it's not an Element node
-                $sibling = $parent->get($i);
-                if (!$sibling instanceof Element) {
-                    continue;
-                }
-
-                // match the selector
-                if ($this->match($token->getSelector(), $sibling, $effectiveRoot)) {
-                    return true;
-                }
-            }
-
-            // no sibling matches the selector
-            return false;
-        } catch (\OutOfBoundsException|\InvalidArgumentException $e) {
+        // don't bother if the node is the first child (no siblings on the left)
+        // ignored \InvalidArgumentException as $node is always a child of $parent
+        $index = $parent->index($node);
+        if (0 === $index) {
             return false;
         }
+
+        // test all preceding siblings & bail after the first successful match
+        for ($i = $index - 1; $i >= 0; $i--) {
+            // skip the sibling if it's not an Element node
+            // ignored \OutOfBoundsException as $index will always be within the list of children
+            $sibling = $parent->get($i);
+            if (!$sibling instanceof Element) {
+                continue;
+            }
+
+            // match the selector
+            if ($this->match($token->getSelector(), $sibling, $effectiveRoot)) {
+                return true;
+            }
+        }
+
+        // no sibling matches the selector
+        return false;
     }
 
     /**

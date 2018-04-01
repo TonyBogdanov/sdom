@@ -483,6 +483,71 @@ class DomTest extends TestCase
     }
 
     /**
+     * Test testFindFirstElement() properly finds the first element node or returns NULL.
+     *
+     * @covers ::findFirstElement()
+     *
+     * @throws \ReflectionException
+     */
+    public function testFindFirstElement()
+    {
+        $element = $this->demoElement();
+        $goodNodes = [
+            $this->demoCData(),
+            $this->demoComment(),
+            $this->demoDocType(),
+            $this->demoText(),
+            $element,
+            $this->demoVoidElement()
+        ];
+        $badNodes = [
+            $this->demoCData(),
+            $this->demoComment(),
+            $this->demoDocType(),
+        ];
+
+        $reflection = (new \ReflectionClass(Dom::class))->getMethod('findFirstElement');
+        $reflection->setAccessible(true);
+
+        $this->assertSame($element, $reflection->invoke(null, $goodNodes));
+        $this->assertNull($reflection->invoke(null, $badNodes));
+    }
+
+    /**
+     * Test findFirstInnermostElement() properly finds the first inner-most element node or returns NULL.
+     *
+     * @covers ::findFirstInnermostElement()
+     *
+     * @throws \ReflectionException
+     */
+    public function testFindFirstInnermostElement()
+    {
+        $element = $this->demoElement();
+        $goodTree = $this->demoElement()
+            ->insertAfter($this->demoComment())
+            ->insertAfter(
+                $this->demoElement()
+                    ->insertAfter($this->demoComment())
+                    ->insertAfter(
+                        $this->demoElement()
+                            ->insertAfter($this->demoComment())
+                            ->insertAfter($element)
+                            ->insertAfter($this->demoElement())
+                    )->insertAfter($this->demoElement())
+            )->insertAfter($this->demoElement());
+        $badTree = $this->demoElement()
+            ->insertAfter($this->demoCData())
+            ->insertAfter($this->demoComment())
+            ->insertAfter($this->demoText());
+
+        $reflection = (new \ReflectionClass(Dom::class))->getMethod('findFirstInnermostElement');
+        $reflection->setAccessible(true);
+
+        $this->assertSame($element, $reflection->invoke(null, $goodTree->getIterator()->getArrayCopy()));
+        $this->assertNull($reflection->invoke(null, $badTree->getIterator()->getArrayCopy()));
+    }
+
+    /**
      * Test constructing a Dom instance from various content types.
      *
      * @covers ::__construct()
@@ -876,6 +941,250 @@ class DomTest extends TestCase
         $assert($content, $dom->children()->get(), function (array $expected) use ($node) {
             return array_merge($expected, [$node]);
         });
+    }
+
+    /**
+     * Test wrap() against a complex structure.
+     *
+     * @covers ::wrap()
+     *
+     * @return array
+     */
+    public function testWrap(): array
+    {
+        $assertChainIntact = function ($chain, $child1, $child2, $child3) {
+            $this->assertCount(3, $chain);
+            $this->assertSame($child1, $chain->get(0));
+            $this->assertSame($child2, $chain->get(1));
+            $this->assertSame($child3, $chain->get(2));
+        };
+
+        $assertWrapperIntact = function (
+            $wrapper,
+            $comment,
+            $wrapperChild1,
+            $wrapperChild2,
+            $wrapperChild1Child1,
+            $wrapperChild1Child2,
+            $wrapperChild2Child1,
+            $wrapperChild2Child2
+        ) {
+            $this->assertCount(3, $wrapper);
+            $this->assertSame($comment, $wrapper->get(0));
+            $this->assertSame($wrapperChild1, $wrapper->get(1));
+            $this->assertSame($wrapperChild2, $wrapper->get(2));
+            $this->assertCount(2, $wrapperChild1);
+            $this->assertSame($wrapperChild1Child1, $wrapperChild1->get(0));
+            $this->assertSame($wrapperChild1Child2, $wrapperChild1->get(1));
+            $this->assertCount(0, $wrapperChild1Child1);
+            $this->assertCount(0, $wrapperChild1Child2);
+            $this->assertCount(2, $wrapperChild2);
+            $this->assertSame($wrapperChild2Child1, $wrapperChild2->get(0));
+            $this->assertSame($wrapperChild2Child2, $wrapperChild2->get(1));
+            $this->assertCount(0, $wrapperChild2Child1);
+            $this->assertCount(0, $wrapperChild2Child2);
+        };
+
+        $parent = new Element('parent');
+
+        $child1 = new Element('child1');
+        $child1Child1 = new Element('child1child1');
+        $child1Child2 = new Element('child1child2');
+
+        $child2 = new Element('child2');
+        $child2Child1 = new Element('child2child1');
+        $child2Child2 = new Element('child2child2');
+        $child2Comment = new Comment('comment');
+
+        $outer = new Element('outer');
+        $wrapper = new Element('wrapper');
+        $comment = new Comment('comment');
+
+        $wrapperChild1 = new Element('wrapperchild1');
+        $wrapperChild1Child1 = new Element('wrapperchild1child1');
+        $wrapperChild1Child2 = new Element('wrapperchild1child2');
+
+        $wrapperChild2 = new Element('wrapperchild2');
+        $wrapperChild2Child1 = new Element('wrapperchild2child1');
+        $wrapperChild2Child2 = new Element('wrapperchild2child2');
+
+        $parent->insertAfter($child1)->insertAfter($child2);
+        $child1->insertAfter($child1Child1)->insertAfter($child1Child2);
+        $child2->insertAfter($child2Child1)->insertAfter($child2Child2)->insertAfter($child2Comment);
+
+        $outer->insertAfter($wrapper);
+        $wrapper->insertAfter($comment)->insertAfter($wrapperChild1)->insertAfter($wrapperChild2);
+        $wrapperChild1->insertAfter($wrapperChild1Child1)->insertAfter($wrapperChild1Child2);
+        $wrapperChild2->insertAfter($wrapperChild2Child1)->insertAfter($wrapperChild2Child2);
+
+        $chain = (new Dom($child2Child1))
+            ->add($child2Child2)
+            ->add($child2Comment)
+            ->wrap(new Dom($wrapper));
+
+        // assert that the chain still points to the original collection
+        $assertChainIntact($chain, $child2Child1, $child2Child2, $child2Comment);
+
+        // assert that the original wrapper structure is intact
+        $assertWrapperIntact($wrapper, $comment, $wrapperChild1, $wrapperChild2, $wrapperChild1Child1,
+            $wrapperChild1Child2, $wrapperChild2Child1, $wrapperChild2Child2);
+
+        // assert the new structure
+        $this->assertCount(2, $parent);
+        $this->assertSame($child1, $parent->get(0));
+        $this->assertSame($child2, $parent->get(1));
+        $this->assertCount(2, $child1);
+        $this->assertSame($child1Child1, $child1->get(0));
+        $this->assertSame($child1Child2, $child1->get(1));
+        $this->assertCount(0, $child1Child1);
+        $this->assertCount(0, $child1Child2);
+        $this->assertCount(3, $child2);
+
+        // the changed part
+        // wrapped child 2 child 1
+        $this->assertNotSame($wrapper, $child2->get(0));
+        $this->assertEquals($wrapper->clone()->detach()->clear(), $child2->get(0)->clone()->detach()->clear());
+        $this->assertCount(1, $child2->get(0));
+        $this->assertNotSame($wrapperChild1, $child2->get(0)->get(0));
+        $this->assertEquals($wrapperChild1->clone()->detach()->clear(), $child2->get(0)->get(0)->clone()->detach()
+            ->clear());
+        $this->assertCount(1, $child2->get(0)->get(0));
+        $this->assertNotSame($wrapperChild1Child1, $child2->get(0)->get(0)->get(0));
+        $this->assertEquals($wrapperChild1Child1->clone()->detach()->clear(), $child2->get(0)->get(0)->get(0)->clone()
+            ->detach()->clear());
+        $this->assertCount(1, $child2->get(0)->get(0)->get(0));
+        $this->assertSame($child2Child1, $child2->get(0)->get(0)->get(0)->get(0));
+
+        // wrapped child 2 child 2
+        $this->assertNotSame($wrapper, $child2->get(1));
+        $this->assertEquals($wrapper->clone()->detach()->clear(), $child2->get(1)->clone()->detach()->clear());
+        $this->assertCount(1, $child2->get(1));
+        $this->assertNotSame($wrapperChild1, $child2->get(1)->get(0));
+        $this->assertEquals($wrapperChild1->clone()->detach()->clear(), $child2->get(1)->get(0)->clone()->detach()
+            ->clear());
+        $this->assertCount(1, $child2->get(1)->get(0));
+        $this->assertNotSame($wrapperChild1Child1, $child2->get(1)->get(0)->get(0));
+        $this->assertEquals($wrapperChild1Child1->clone()->detach()->clear(), $child2->get(1)->get(0)->get(0)->clone()
+            ->detach()->clear());
+        $this->assertCount(1, $child2->get(1)->get(0)->get(0));
+        $this->assertSame($child2Child2, $child2->get(1)->get(0)->get(0)->get(0));
+
+        // wrapped child 2 comment
+        $this->assertNotSame($wrapper, $child2->get(2));
+        $this->assertEquals($wrapper->clone()->detach()->clear(), $child2->get(2)->clone()->detach()->clear());
+        $this->assertCount(1, $child2->get(2));
+        $this->assertNotSame($wrapperChild1, $child2->get(2)->get(0));
+        $this->assertEquals($wrapperChild1->clone()->detach()->clear(), $child2->get(2)->get(0)->clone()->detach()
+            ->clear());
+        $this->assertCount(1, $child2->get(2)->get(0));
+        $this->assertNotSame($wrapperChild1Child1, $child2->get(2)->get(0)->get(0));
+        $this->assertEquals($wrapperChild1Child1->clone()->detach()->clear(), $child2->get(2)->get(0)->get(0)->clone()
+            ->detach()->clear());
+        $this->assertCount(1, $child2->get(2)->get(0)->get(0));
+        $this->assertSame($child2Comment, $child2->get(2)->get(0)->get(0)->get(0));
+
+        return [
+            $assertChainIntact,
+            $assertWrapperIntact
+        ];
+    }
+
+    /**
+     * @covers ::wrap()
+     * @depends testWrap
+     *
+     * @param array $wrap
+     */
+    public function testWrapContentHasNoElementNode(array $wrap)
+    {
+        $parent = new Element('parent');
+        $child1 = new Element('child1');
+        $child2 = new Element('child2');
+        $child3 = new Element('child3');
+
+        $parent
+            ->insertAfter($child1)
+            ->insertAfter($child2)
+            ->insertAfter($child3);
+
+        (new Dom($child1))
+            ->add($child2)
+            ->add($child3)
+            ->wrap($this->demoComment());
+
+        $wrap[0]($parent, $child1, $child2, $child3);
+    }
+
+    /**
+     * @covers ::wrap()
+     */
+    public function testWrapContentHasNoDeeperElementNode()
+    {
+        $parent = new Element('parent');
+        $child1 = new Element('child1');
+        $child2 = new Element('child2');
+        $child3 = new Element('child3');
+
+        $wrapper = new Element('a');
+        $wrapperComment = $this->demoComment();
+
+        $parent
+            ->insertAfter($child1)
+            ->insertAfter($child2)
+            ->insertAfter($child3);
+
+        $wrapper
+            ->insertAfter($wrapperComment);
+
+        $chain = (new Dom($child1))
+            ->add($child2)
+            ->add($child3)
+            ->wrap($wrapper);
+
+        $this->assertEquals($child1->clone()->detach()->clear(), $chain->get(0)->clone()->detach()->clear());
+        $this->assertEquals($child2->clone()->detach()->clear(), $chain->get(1)->clone()->detach()->clear());
+        $this->assertEquals($child3->clone()->detach()->clear(), $chain->get(2)->clone()->detach()->clear());
+
+        $this->assertNotNull($chain->get(0)->parent());
+        $this->assertNotNull($chain->get(1)->parent());
+        $this->assertNotNull($chain->get(2)->parent());
+
+        $this->assertEquals($wrapper->clone()->detach()->clear(), $chain->get(0)->parent()->clone()->detach()->clear());
+        $this->assertEquals($wrapper->clone()->detach()->clear(), $chain->get(1)->parent()->clone()->detach()->clear());
+        $this->assertEquals($wrapper->clone()->detach()->clear(), $chain->get(2)->parent()->clone()->detach()->clear());
+
+        $this->assertCount(2, $chain->get(0)->parent());
+        $this->assertCount(2, $chain->get(1)->parent());
+        $this->assertCount(2, $chain->get(2)->parent());
+
+        $this->assertEquals($wrapperComment->clone()->detach(), $chain->get(0)->parent()->get(0)->clone()->detach());
+        $this->assertEquals($wrapperComment->clone()->detach(), $chain->get(1)->parent()->get(0)->clone()->detach());
+        $this->assertEquals($wrapperComment->clone()->detach(), $chain->get(2)->parent()->get(0)->clone()->detach());
+
+        $this->assertEquals($child1->clone()->detach()->clear(), $chain->get(0)->parent()->get(1)->clone()->detach()
+            ->clear());
+        $this->assertEquals($child2->clone()->detach()->clear(), $chain->get(1)->parent()->get(1)->clone()->detach()
+            ->clear());
+        $this->assertEquals($child3->clone()->detach()->clear(), $chain->get(2)->parent()->get(1)->clone()->detach()
+            ->clear());
+    }
+
+    /**
+     * @covers ::wrap()
+     */
+    public function testWrapCollectionElementWithNoParentIsIgnored()
+    {
+        $parent = new Element('parent');
+        $child = new Element('child');
+        $foreign = new Element('foreign');
+
+        $parent->insertAfter($child);
+
+        (new Dom($child))
+            ->add($foreign)
+            ->wrap($this->demoElement());
+
+        $this->assertNull($foreign->parent());
     }
 
     /**

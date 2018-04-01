@@ -59,7 +59,7 @@ class SelectorMatcher
                 return $this->match($token->getTree(), $node, $effectiveRoot);
 
             case $token instanceof Css\ElementNode:
-                return $this->matchElementNode($token, $node, $effectiveRoot);
+                return $this->matchElementNode($token, $node);
 
             case $token instanceof Css\AttributeNode:
                 return $this->matchAttributeNode($token, $node, $effectiveRoot);

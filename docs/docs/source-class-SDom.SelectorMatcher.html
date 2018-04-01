@@ -130,7 +130,7 @@
 </span><span class="l" id="line-59">                <span class="php-keyword1">return</span> <span class="php-var">$this</span>-&gt;match(<span class="php-var">$token</span>-&gt;getTree(), <span class="php-var">$node</span>, <span class="php-var">$effectiveRoot</span>);
 </span><span class="l" id="line-60">
 </span><span class="l" id="line-61">            <span class="php-keyword1">case</span> <span class="php-var">$token</span> <span class="php-keyword1">instanceof</span> Css\ElementNode:
-</span><span class="l" id="line-62">                <span class="php-keyword1">return</span> <span class="php-var">$this</span>-&gt;matchElementNode(<span class="php-var">$token</span>, <span class="php-var">$node</span>, <span class="php-var">$effectiveRoot</span>);
+</span><span class="l" id="line-62">                <span class="php-keyword1">return</span> <span class="php-var">$this</span>-&gt;matchElementNode(<span class="php-var">$token</span>, <span class="php-var">$node</span>);
 </span><span class="l" id="line-63">
 </span><span class="l" id="line-64">            <span class="php-keyword1">case</span> <span class="php-var">$token</span> <span class="php-keyword1">instanceof</span> Css\AttributeNode:
 </span><span class="l" id="line-65">                <span class="php-keyword1">return</span> <span class="php-var">$this</span>-&gt;matchAttributeNode(<span class="php-var">$token</span>, <span class="php-var">$node</span>, <span class="php-var">$effectiveRoot</span>);

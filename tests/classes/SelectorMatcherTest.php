@@ -6,7 +6,10 @@ use PHPUnit\Framework\TestCase;
 use SDom\Node\Element;
 use SDom\SelectorMatcher;
 use Symfony\Component\CssSelector\Node\AttributeNode;
+use Symfony\Component\CssSelector\Node\ClassNode;
+use Symfony\Component\CssSelector\Node\CombinedSelectorNode;
 use Symfony\Component\CssSelector\Node\ElementNode;
+use Symfony\Component\CssSelector\Node\HashNode;
 use Symfony\Component\CssSelector\Node\NodeInterface;
 use Symfony\Component\CssSelector\Node\SelectorNode;
 
@@ -61,6 +64,9 @@ class SelectorMatcherTest extends TestCase
         self::$matcher->match(new SelectorNode(new ElementNode()), $void);
         self::$matcher->match(new ElementNode(), $void);
         self::$matcher->match(new AttributeNode(new ElementNode(), null, 'a', 'exists', null), $void);
+        self::$matcher->match(new ClassNode(new ElementNode(), 'a'), $void);
+        self::$matcher->match(new HashNode(new ElementNode(), 'a'), $void);
+        self::$matcher->match(new CombinedSelectorNode(new ElementNode(), ' ', new ElementNode()), $void);
 
         $this->assertTrue(true);
     }

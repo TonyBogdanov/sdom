@@ -86,7 +86,7 @@ class Dom implements
      *
      * Add all nodes that match at least one of the selector tokens to the specified Dom collection and return it.
      *
-     * The supplied $effectiveRoot node will be considered as the root of the tree, even if there are more ancestors.
+     * The supplied $effectiveRoot node will be considered the root of the tree, even if there are more ancestors.
      * Child nodes will be treated, when matching, as if they don't have a parent node.
      *
      * @param Dom $dom
@@ -119,6 +119,47 @@ class Dom implements
         }
 
         return $dom;
+    }
+
+    /**
+     * Loop over the supplied array of nodes and return the first matched element node or NULL.
+     *
+     * @param NodeInterface[] $nodes
+     * @return null|Element
+     */
+    protected static function findFirstElement(array $nodes): ?Element
+    {
+        foreach ($nodes as $node) {
+            if ($node instanceof Element) {
+                return $node;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Loop over the supplied array of nodes and find the first matched element node. If it has child nodes, find the
+     * first matched element child, then recurse until the inner-most element node with no children (element nodes)
+     * is found and return it.
+     *
+     * If the array does not contain an element node, return NULL.
+     *
+     * @param NodeInterface[] $nodes
+     * @param null|Element $fallback
+     * @return null|Element
+     */
+    protected static function findFirstInnermostElement(array $nodes, Element $fallback = null): ?Element
+    {
+        $element = static::findFirstElement($nodes);
+        if (!$element) {
+            return $fallback;
+        }
+
+        if ($element->isVoid() || 0 === count($element)) {
+            return $element;
+        }
+
+        return static::findFirstInnermostElement($element->getIterator()->getArrayCopy(), $element);
     }
 
     /**
@@ -396,6 +437,8 @@ class Dom implements
      */
     public function append($content): Dom
     {
+        $nodes = (new static($content))->nodes;
+
         /** @var NodeInterface $node */
         foreach ($this->nodes as $node) {
             if (!$node instanceof Element) {
@@ -403,7 +446,7 @@ class Dom implements
             }
 
             /** @var NodeInterface $child */
-            foreach ((new static($content))->nodes as $child) {
+            foreach ($nodes as $child) {
                 $node->insertAfter(null === $child->parent() ? $child : $child->clone());
             }
         }
@@ -429,6 +472,8 @@ class Dom implements
      */
     public function prepend($content): Dom
     {
+        $nodes = array_reverse((new static($content))->nodes);
+
         /** @var NodeInterface $node */
         foreach ($this->nodes as $node) {
             if (!$node instanceof Element) {
@@ -436,7 +481,7 @@ class Dom implements
             }
 
             /** @var NodeInterface $child */
-            foreach (array_reverse((new static($content))->nodes) as $child) {
+            foreach ($nodes as $child) {
                 $node->insertBefore(null === $child->parent() ? $child : $child->clone());
             }
         }
@@ -510,6 +555,69 @@ class Dom implements
             /** @var NodeInterface $child */
             foreach (array_reverse((new static($content))->nodes) as $child) {
                 $parent->insertAfter(null === $child->parent() ? $child : $child->clone(), $node);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Wrap a clone of the supplied content around each node with a parent (not only element nodes) in the collection.
+     *
+     * If the content resolves to a collection of more than one wrapping element node, use only the first one.
+     * If the wrapping element has children use a single-element-per-level sub-tree, where the wrapping element is
+     * the root and may contain one and only one element node, which may contain another one and only one element node
+     * and so on.
+     *
+     * Wrap the current collection nodes in clones of this sub-tree as immediate children of the inner-most element
+     * node of the tree. If a node in the collection does not have a parent element, ignore it.
+     *
+     * If the wrapping collection does not contain at least one element node, do nothing.
+     *
+     * Return the original collection for chaining.
+     *
+     * @param $content
+     * @return Dom
+     */
+    public function wrap($content): Dom
+    {
+        // get a detached clone of the first element node in the content
+        /** @var Element $wrapper */
+        $wrapper = static::findFirstElement((new static($content))->nodes);
+        if (!$wrapper) {
+            return $this;
+        }
+        $wrapper = $wrapper->clone()->detach();
+
+        // collapse the wrapper down to a single-element-per-level tree of clones
+        $inner = $wrapper;
+        while (0 < count($inner)) {
+            $element = static::findFirstElement($inner->getIterator()->getArrayCopy());
+            if (!$element) {
+                break;
+            }
+            $inner->clear()->insertAfter($inner = $element->clone());
+        }
+
+        // wrap nodes
+        foreach ($this->nodes as $node) {
+            if (null === $node->parent()) {
+                continue;
+            }
+
+            /** @var Element $insert */
+            $insert = $wrapper->clone();
+
+            /** @var Element $parent */
+            $parent = $node->parent();
+            $parent->insertAfter($insert, $node);
+
+            $inner = static::findFirstInnermostElement($insert->getIterator()->getArrayCopy());
+
+            if ($inner) {
+                $inner->insertAfter($node);
+            } else {
+                $insert->insertAfter($node);
             }
         }
 

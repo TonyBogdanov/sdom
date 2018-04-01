@@ -4,8 +4,7 @@ namespace SDom\Test\SelectorMatcher;
 
 use PHPUnit\Framework\TestCase;
 use SDom\Dom;
-use SDom\SelectorMatcher\HashNodeTrait;
-use SDom\Test\Helper\SelectorMatcherTraitMockTrait;
+use SDom\SelectorMatcher;
 use Symfony\Component\CssSelector\Node\ElementNode;
 use Symfony\Component\CssSelector\Node\HashNode;
 
@@ -18,19 +17,37 @@ use Symfony\Component\CssSelector\Node\HashNode;
  */
 class HashNodeTraitTest extends TestCase
 {
-    use SelectorMatcherTraitMockTrait;
+    /**
+     * @var SelectorMatcher
+     */
+    protected static $matcher;
+
+    /**
+     * @inheritDoc
+     */
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+        self::$matcher = new SelectorMatcher();
+    }
 
     /**
      * @covers ::matchHashNode()
+     * 
+     * @throws \ReflectionException
      */
     public function testMatchHashNode()
     {
-        $this->mockTrait(HashNodeTrait::class, 'matchHashNode');
+        $match = (new \ReflectionClass(SelectorMatcher::class))->getMethod('matchHashNode');
+        $match->setAccessible(true);
 
         $void = new ElementNode();
 
-        $this->assertFalse($this->invoke(new HashNode($void, 'demo'), (new Dom('<div/>'))->get(0)));
-        $this->assertFalse($this->invoke(new HashNode($void, 'demo'), (new Dom('<div id="demo2"/>'))->get(0)));
-        $this->assertTrue($this->invoke(new HashNode($void, 'demo'), (new Dom('<div id="demo"/>'))->get(0)));
+        $this->assertFalse($match->invoke(self::$matcher, new HashNode($void, 'demo'),
+            (new Dom('<div/>'))->get(0)));
+        $this->assertFalse($match->invoke(self::$matcher, new HashNode($void, 'demo'),
+            (new Dom('<div id="demo2"/>'))->get(0)));
+        $this->assertTrue($match->invoke(self::$matcher, new HashNode($void, 'demo'),
+            (new Dom('<div id="demo"/>'))->get(0)));
     }
 }
